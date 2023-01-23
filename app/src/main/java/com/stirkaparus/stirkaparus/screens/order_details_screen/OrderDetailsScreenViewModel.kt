@@ -3,8 +3,11 @@ package com.stirkaparus.stirkaparus.screens.order_details_screen
 import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.stirkaparus.stirkaparus.common.Constants
 import com.stirkaparus.stirkaparus.model.Order
 import com.stirkaparus.stirkaparus.screens.orders_list_screen.Status
 import kotlinx.coroutines.channels.awaitClose
@@ -15,20 +18,20 @@ class OrderDetailsScreenViewModel() : ViewModel() {
 
     fun getOrder(
         productId: String
-    )  = callbackFlow {
+    ) = callbackFlow {
         val productIdRef = db.collection("orders").document(productId)
         val snapshotListener = productIdRef.addSnapshotListener { snapshot, e ->
             val productResponse = if (snapshot != null) {
                 val product = snapshot.toObject(Order::class.java)
 
-                Log.e(TAG, "getProductFromFirestore: $product", )
+                Log.e(TAG, "getProductFromFirestore: $product")
 
                 Resource.success(product)
 
 
             } else {
 
-                Resource.error(e?.message.toString(),null)
+                Resource.error(e?.message.toString(), null)
 
             }
             trySend(productResponse)
@@ -36,6 +39,42 @@ class OrderDetailsScreenViewModel() : ViewModel() {
         awaitClose {
             snapshotListener.remove()
         }
+    }
+
+    fun deleteOrder(
+        id: String?,
+        success: () -> Unit,
+        failure: () -> Unit
+    ) {
+        db.collection("orders").document(id.toString())
+            .set(
+                hashMapOf(
+                    "status" to "deleted",
+                    "delete_time" to FieldValue.serverTimestamp()
+                ),
+                SetOptions.merge()
+            )
+            .addOnSuccessListener { success() }
+            .addOnFailureListener { failure() }
+    }
+
+    fun changeStatus(
+        id: String?,
+        status: String,
+        success: () -> Unit,
+        failure: () -> Unit
+    ) {
+        Log.e(TAG, "OrderDetailsScreen:$id + $status")
+        db.collection(Constants.ORDERS).document(id.toString())
+            .set(
+                hashMapOf(
+                    "status" to status,
+                    status+"_time" to FieldValue.serverTimestamp()
+                ),
+                SetOptions.merge()
+            )
+            .addOnSuccessListener { success() }
+            .addOnFailureListener { failure() }
     }
 
 }

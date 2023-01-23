@@ -1,7 +1,5 @@
 package com.stirkaparus.stirkaparus.model
 
-import androidx.compose.runtime.MutableState
-
 data class Order(
     var phone: String? = "",
     var id: String? = "",
@@ -19,6 +17,7 @@ data class Order(
     var washed_time: Any? = null,
     var canceled_time: Any? = null,
     var finished_time: Any? = null,
+    var delete_time: Any? = null,
     var total: Int? = 0,
     var square: Double? = 0.0
 )

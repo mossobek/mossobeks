@@ -1,7 +1,6 @@
 package com.stirkaparus.stirkaparus.screens
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.*
@@ -24,8 +23,8 @@ import com.stirkaparus.stirkaparus.graphs.HomeNavGraph
 fun HomeScreen(navController: NavHostController = rememberNavController()) {
     Scaffold(
         bottomBar = { BottomBar(navController = navController) }
-    ) {
-        HomeNavGraph(navController = navController)
+    ) {paddingValue->
+        HomeNavGraph(navController = navController,paddingValue)
     }
 }
 

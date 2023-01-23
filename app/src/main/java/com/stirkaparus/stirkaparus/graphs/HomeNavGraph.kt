@@ -1,5 +1,6 @@
 package com.stirkaparus.stirkaparus.graphs
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -8,12 +9,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.stirkaparus.stirkaparus.BottomBarScreen
 import com.stirkaparus.stirkaparus.screens.ScreenContent
+import com.stirkaparus.stirkaparus.screens.add_screen.AddScreen
 import com.stirkaparus.stirkaparus.screens.orders_list_screen.OrdersScreen
-import com.stirkaparus.stirkaparus.screens.orders_list_screen.orderNavGraph
 
 
 @Composable
-fun HomeNavGraph(navController: NavHostController) {
+fun HomeNavGraph(navController: NavHostController, paddingValue: PaddingValues) {
     NavHost(
         navController = navController,
         route = Graph.HOME,
@@ -21,9 +22,9 @@ fun HomeNavGraph(navController: NavHostController) {
     ) {
 
         composable(route = BottomBarScreen.Home.route) {
-            OrdersScreen(navController = navController)
+            OrdersScreen(navController = navController,paddingValue)
 //            ScreenContent(name = BottomBarScreen.Home.route,
-//                 onClick = {
+//                 onClick = {aaaaas
 //                 navController.navigate(Graph.DETAILS)
 //             })
         }
@@ -32,12 +33,12 @@ fun HomeNavGraph(navController: NavHostController) {
         }
         composable(route = BottomBarScreen.Orders.route) {
 
-            OrdersScreen(navController = navController)
+            OrdersScreen(navController = navController,paddingValue)
 
         }
         composable(route = BottomBarScreen.Add.route) {
 
-            AddScreen()
+            AddScreen(navController = navController)
 
         }
 

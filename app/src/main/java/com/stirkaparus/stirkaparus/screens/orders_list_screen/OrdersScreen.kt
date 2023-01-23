@@ -3,6 +3,8 @@ package com.stirkaparus.stirkaparus.screens.orders_list_screen
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.ContentValues.TAG
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
@@ -17,13 +19,15 @@ import androidx.compose.material.icons.filled.Sort
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.navigation.*
-import androidx.navigation.compose.composable
+import androidx.core.content.ContextCompat.startActivity
+import androidx.navigation.NavHostController
 import com.stirkaparus.stirkaparus.graphs.Graph
 import com.stirkaparus.stirkaparus.model.Order
-import com.stirkaparus.stirkaparus.screens.order_details_screen.OrderDetailsScreen
-import com.stirkaparus.stirkaparus.screens.order_edit_screen.OrderEditScreen
+import com.stirkaparus.stirkaparus.screens.ProgressDialog
+import com.stirkaparus.stirkaparus.screens.order_details_screen.OrderDetailsScreenViewModel
+import com.stirkaparus.stirkaparus.screens.order_edit_screen.showToast
 import com.stirkaparus.stirkaparus.screens.orders_list_screen.components.OrderItem
 import com.stirkaparus.stirkaparus.screens.orders_list_screen.components.SortSection
 import com.stirkaparus.stirkaparus.ui.theme.BackgroundColor
@@ -31,8 +35,12 @@ import com.stirkaparus.stirkaparus.ui.theme.BackgroundColor
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "UnrememberedMutableState")
 @Composable
 fun OrdersScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    paddingValue: PaddingValues
 ) {
+
+    val context = LocalContext.current
+    val viewModelEditText = OrderDetailsScreenViewModel()
 
     val filterList: List<String> = listOf("created", "taken")
     val viewModel: OrdersViewModel = OrdersViewModel()
@@ -44,19 +52,22 @@ fun OrdersScreen(
     val selectedFilter = remember {
         mutableStateOf("")
     }
-
+    var loading by remember { mutableStateOf(false) }
+    loading = ProgressDialog(loading)
 
 
     Scaffold(
         modifier =
-        Modifier.fillMaxSize(),
+        Modifier.fillMaxSize().padding(bottom = paddingValue.calculateBottomPadding()),
         scaffoldState = scaffoldState
     ) {
         Column(
             modifier = Modifier
                 .background(BackgroundColor)
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(top = 6.dp)
+                .padding(start = 6.dp)
+                .padding(end = 6.dp)
         ) {
             Row(
 
@@ -65,14 +76,23 @@ fun OrdersScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
-                Row() {
+                Row(
+                    modifier = Modifier
+                        .padding(start = 16.dp)
+                        .weight(3f),
+                    horizontalArrangement = Arrangement.Start
+                ) {
 
                     Text(
                         text = "Заказы",
                         style = MaterialTheme.typography.h4
                     )
                 }
-                Row() {
+                Row(
+                    modifier = Modifier
+                        .weight(1f),
+                    horizontalArrangement = Arrangement.End
+                ) {
 
                     IconButton(
 
@@ -114,7 +134,7 @@ fun OrdersScreen(
 
                 )
             }
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(6.dp))
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 items(filteredPosts) { order ->
                     if (order != null) {
@@ -124,19 +144,35 @@ fun OrdersScreen(
                                 .fillMaxWidth()
                                 .clickable(
                                     onClick = {
-
-
-                                        navController.navigate(Graph.ORDER_DETAIL+"/${order.id}")
-
+                                        navController.navigate(Graph.ORDER_DETAIL + "/${order.id}")
                                     }
                                 ),
-                            onItemMenuClick = {
-                                // delete order
+                            onDeleteItemMenuClick = {
 
+                                loading = true
+                                viewModelEditText.deleteOrder(
+                                    order.id,
+                                    success = {
+                                        showToast(context, "Заказ удален!")
+                                        loading = false
+                                    },
+                                    failure = {
+                                        showToast(context, "Что то пошло не так...")
+                                        loading = false
+
+                                    })
+
+
+                            },
+                            onPhoneClick = {
+                                val callPhone = order.phone
+                                val callIntent = Intent(Intent.ACTION_DIAL)
+                                callIntent.data = Uri.parse("tel:$callPhone")
+                                startActivity(context, callIntent, null)
                             }
                         )
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(6.dp))
                 }
             }
         }
@@ -144,27 +180,7 @@ fun OrdersScreen(
     }
 }
 
-fun NavGraphBuilder.orderNavGraph(
-    navController: NavHostController
-) {
-    navigation(
-        route = Graph.ORDER_DETAIL+"/{id}",
-        startDestination = OrderDetailsScreen1.OrderDetails.route+"/{id}"
-    ) {
-        composable(
-            route = OrderDetailsScreen1.OrderDetails.route+"/{id}",
-            arguments = listOf(navArgument("id") {
-                type = NavType.StringType
-            })
-        ) {
 
-            OrderDetailsScreen(navController = navController)
-        }
-        composable(route = OrderDetailsScreen1.Edit1.route+"/{id}") {
-            OrderEditScreen(navController = navController)
-        }
-    }
-}
 
 
 sealed class OrderDetailsScreen1(val route: String) {
@@ -199,7 +215,7 @@ private fun filterOrder(
             posts
         }
         else -> {
-            posts
+            posts.filter { it?.status != "deleted" }
         }
     }
     return filteredPosts

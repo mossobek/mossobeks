@@ -6,23 +6,22 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.stirkaparus.stirkaparus.model.Order
+import com.stirkaparus.stirkaparus.screens.ProgressDialog
+import com.stirkaparus.stirkaparus.screens.order_details_screen.components.CustomTextFieldRow
+import com.stirkaparus.stirkaparus.screens.order_details_screen.components.OrderDetailsStatusComponent
+import com.stirkaparus.stirkaparus.screens.order_details_screen.components.StatusChange
+import com.stirkaparus.stirkaparus.screens.order_edit_screen.showToast
 import com.stirkaparus.stirkaparus.screens.orders_list_screen.OrderDetailsScreen1
-import com.stirkaparus.stirkaparus.ui.theme.OrderDetailsDescriptionColor
+import com.stirkaparus.stirkaparus.screens.orders_list_screen.components.formatDate
+import com.stirkaparus.stirkaparus.screens.orders_list_screen.components.setStatus
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -32,76 +31,121 @@ fun OrderDetailsScreen(navController: NavController) {
     val orderResource by viewModel.getOrder(id.toString())
         .collectAsState(initial = Resource.loading(null))
     val order = orderResource.data ?: Order()
+    val context = LocalContext.current
+
+    var loading by remember { mutableStateOf(false) }
+    var alertDialogState by remember { mutableStateOf(false) }
+
+    if (alertDialogState) StatusChange(
+        order.status,
+        onClick = { status->
+
+            viewModel.changeStatus(
+                id,
+                status.status,
+                success = {
+                          alertDialogState = false
+                },
+                failure = {
+                    alertDialogState = false
+
+                }
+            )
+        },
+        onDismiss = {alertDialogState = false}
+    )
+
+
     Scaffold(
         modifier = Modifier.fillMaxSize(), backgroundColor = Color.LightGray
     ) {
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-
+            loading = ProgressDialog(loading)
             OrderDetailsTopBarComponent(
-                navController,id.toString()
+                navController, id.toString(),
+                deleteOrder = {
+                    loading = true
+                    viewModel.deleteOrder(
+                        id,
+                        success = {
+                            navController.popBackStack()
+                            showToast(context, "Заказ удален!")
+                            loading = false
+                        },
+                        failure = {
+                            showToast(context, "Что то пошло не так...")
+                            loading = false
+
+                        })
+                }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
-            OrderDetailsTextComponent(
+            CustomTextFieldRow(
                 description = "Телефон",
                 text = order.phone.toString(),
                 icon = Icons.Default.Phone
             )
             Spacer(modifier = Modifier.height(2.dp))
-            OrderDetailsTextComponent(
+            CustomTextFieldRow(
                 description = "Адрес",
                 text = order.address.toString(),
                 icon = Icons.Default.LocationOn
             )
             Spacer(modifier = Modifier.height(2.dp))
-            OrderDetailsTextComponent(
+            CustomTextFieldRow(
                 description = "Комментарий",
                 text = order.comment.toString(),
                 icon = Icons.Default.Comment
             )
             Spacer(modifier = Modifier.height(2.dp))
-            OrderDetailsTextComponent(
+            OrderDetailsStatusComponent(
+                status = setStatus(order.status.toString(), order),
                 description = "Статус",
                 text = order.status.toString(),
-                icon = Icons.Default.CheckCircle
+                icon = Icons.Default.CheckCircle,
+                onClock = { alertDialogState = true}
             )
             Spacer(modifier = Modifier.height(2.dp))
-            OrderDetailsTextComponent(
+            CustomTextFieldRow(
                 description = "Количество",
                 text = order.count.toString(),
                 icon = Icons.Default.AutoAwesomeMotion,
-                secondIcon = Icons.Default.AddBox
+                secondIcon = Icons.Default.AddBox,
+                onClick = {
+
+                }
             )
             Spacer(modifier = Modifier.height(2.dp))
-            OrderDetailsTextComponent(
+            CustomTextFieldRow(
                 description = "Сумма",
                 text = order.total.toString(),
                 icon = Icons.Default.Money
             )
             Spacer(modifier = Modifier.height(20.dp))
-            OrderDetailsTextComponent(
+            CustomTextFieldRow(
                 description = "Создан",
-                text = "12.1.2023",
+                text = formatDate(order.created_time),
                 paddingStart = 16.dp
             )
             Spacer(modifier = Modifier.height(2.dp))
-            OrderDetailsTextComponent(
+            CustomTextFieldRow(
                 description = "Забран",
-                text = "--:--",
+                text = formatDate(order.taken_time),
                 paddingStart = 16.dp
             )
             Spacer(modifier = Modifier.height(2.dp))
-            OrderDetailsTextComponent(
+            CustomTextFieldRow(
                 description = "Постиран",
-                text = "--:--",
+                text = formatDate(order.washed_time),
                 paddingStart = 16.dp
             )
             Spacer(modifier = Modifier.height(2.dp))
-            OrderDetailsTextComponent(
+            CustomTextFieldRow(
                 description = "Доставлен",
-                text = "--:--",
+                text = formatDate(order.delivered_time),
                 paddingStart = 16.dp
             )
             Spacer(modifier = Modifier.height(2.dp))
@@ -112,8 +156,9 @@ fun OrderDetailsScreen(navController: NavController) {
 }
 
 
+
 @Composable
-fun OrderDetailsTopBarComponent(navController: NavController,id:String) {
+fun OrderDetailsTopBarComponent(navController: NavController, id: String, deleteOrder: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -148,100 +193,22 @@ fun OrderDetailsTopBarComponent(navController: NavController,id:String) {
                 modifier = Modifier
                     .padding(end = 0.dp),
                 onClick = {
-                    navController.navigate(OrderDetailsScreen1.Edit1.route+"/${id}")
+                    navController.navigate(OrderDetailsScreen1.Edit1.route + "/${id}")
                 }) {
                 Icon(
                     imageVector = Icons.Default.Edit,
-                    contentDescription = "Delete icon button"
+                    contentDescription = "Edit icon button"
                 )
             }
-            IconButton(modifier = Modifier.padding(end = 8.dp), onClick = { /*TODO*/ }) {
+            IconButton(modifier = Modifier.padding(end = 8.dp), onClick = {
+                deleteOrder()
+            }) {
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = "Delete icon button"
                 )
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun OrderDetailsTextComponent(
-    text: String = "Text",
-    description: String = "description",
-    textColor: Color = Color.Black,
-    divider: Boolean = false,
-    icon: ImageVector? = null,
-    secondIcon: ImageVector? = null,
-    iconDescr: String = "",
-    secondIconDescr: String = "",
-    paddingStart: Dp = 6.dp
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(35.dp)
-            .background(Color.White),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            if (icon != null) {
-                Icon(
-                    modifier = Modifier
-                        .size(20.dp)
-                        .padding(start = 6.dp),
-                    imageVector = icon,
-                    tint = Color.DarkGray,
-                    contentDescription = iconDescr
-                )
-            }
-            Text(
-                modifier = Modifier
-                    .padding(start = paddingStart)
-                    .padding(end = 16.dp),
-                text = description,
-                color = OrderDetailsDescriptionColor,
-                fontSize = 18.sp
-            )
-        }
-
-        Row(
-            horizontalArrangement = Arrangement.End,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                modifier = Modifier.padding(end = 16.dp),
-                text = text,
-                color = textColor,
-                fontSize = 18.sp,
-                maxLines = 1,
-                textAlign = TextAlign.End,
-                overflow = TextOverflow.Ellipsis
-
-            )
-            if (secondIcon != null) {
-                IconButton(modifier = Modifier
-                    //.padding(start = 10.dp)
-                    .padding(end = 10.dp),
-                    onClick = { /*TODO*/ }) {
-
-                    Icon(
-                        modifier = Modifier
-                            .size(26.dp),
-                        imageVector = secondIcon,
-                        tint = Color.Black,
-                        contentDescription = secondIconDescr
-                    )
-                }
-            }
-        }
-
-
     }
 }
 

@@ -9,6 +9,13 @@ val Purple700 = Color(0xFF3700B3)
 //status colors
 val BlueStatusColor = Color(0xFF64B5F6)
 val PurpleStatusColor = Color(0xFF9575CD)
+val OrangeStatusColor = Color(0xFFC88109)
+val GreenStatusColor = Color(0xFF497D04)
+val GrayStatusColor = Color(0xFF848080)
+val RedStatusColor = Color(0xFFFB0F0F)
+
+
+
 val LightGray = Color(0xFFBBDEFB)
 
 //

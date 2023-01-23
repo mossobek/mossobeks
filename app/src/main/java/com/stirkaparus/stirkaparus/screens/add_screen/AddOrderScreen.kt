@@ -1,14 +1,13 @@
 package com.stirkaparus.stirkaparus.screens.add_screen
 
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,10 +17,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.google.firebase.firestore.FieldValue
+import com.stirkaparus.stirkaparus.common.Constants
+import com.stirkaparus.stirkaparus.model.Order
+import com.stirkaparus.stirkaparus.screens.TopBarComponent
 import com.stirkaparus.stirkaparus.screens.order_edit_screen.OrderEditViewModel
-import com.stirkaparus.stirkaparus.screens.orders_list_screen.components.Status
 
-@OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AddScreen(navController: NavController) {
@@ -33,8 +34,7 @@ fun AddScreen(navController: NavController) {
     val context = LocalContext.current
 
 
-    var buttonLoading by remember { mutableStateOf(false) }
-
+    var buttonLoading by remember { mutableStateOf(true) }
     val phone = remember { mutableStateOf("") }
     val address = remember { mutableStateOf("") }
     val comment = remember { mutableStateOf("") }
@@ -43,6 +43,15 @@ fun AddScreen(navController: NavController) {
     var expanded by remember { mutableStateOf(false) }
     val options = listOf("created", "taken", "washed", "finished", "delivered")
     var selectedOptionText by remember { mutableStateOf(options[0]) }
+    var take by remember { mutableStateOf(false) }
+
+
+
+
+
+
+
+
 
     Scaffold(modifier = Modifier) {
 
@@ -51,85 +60,78 @@ fun AddScreen(navController: NavController) {
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            OrderEditTopBarComponent(navController = navController)
+            TopBarComponent(
+                closeButton = false, title = "Новый заказ", navController = navController
+            )
 
             Spacer(modifier = Modifier.height(20.dp))
 
             OrderEditCustomTextFieldDigits(
-                phone,
+                enable = buttonLoading,
+                text = phone,
                 description = "Телефон",
                 digits = true,
                 inputType = KeyboardType.Decimal
             )
             Spacer(modifier = Modifier.height(8.dp))
-            OrderEditCustomTextFieldDigits(address, description = "Адрес")
-            Spacer(modifier = Modifier.height(8.dp))
-            OrderEditCustomTextFieldDigits(comment, description = "Коммент")
+            OrderEditCustomTextFieldDigits(
+                enable = buttonLoading, text = address, description = "Адрес"
+            )
             Spacer(modifier = Modifier.height(8.dp))
             OrderEditCustomTextFieldDigits(
-                count,
+                enable = buttonLoading, text = comment, description = "Коммент"
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            OrderEditCustomTextFieldDigits(
+                enable = buttonLoading,
+                text = count,
                 description = "Количество",
-                true,
-                inputType = KeyboardType.Decimal
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            OrderEditCustomTextFieldDigits(
-                total,
-                description = "Сумма",
-                true,
+                digits = true,
                 inputType = KeyboardType.Decimal
             )
             Spacer(modifier = Modifier.height(8.dp))
 
 
-
-            ExposedDropdownMenuBox(expanded = expanded,
-                onExpandedChange = {
-                    expanded = !expanded
-                }
-            ) {
-                TextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 16.dp)
-                        .padding(end = 16.dp),
-
-                    readOnly = true,
-                    value = selectedOptionText,
-                    onValueChange = { },
-                    label = { Text(text = "Статус") },
-                    trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(
-                            expanded = expanded
-                        )
-                    },
-                    colors = TextFieldDefaults.textFieldColors(
-                        cursorColor = Color.DarkGray,
-                        disabledLabelColor = Color.DarkGray,
-                        focusedLabelColor = Color.DarkGray,
-                        placeholderColor = Color.DarkGray,
-                        focusedIndicatorColor = Color.DarkGray
-
-                    )
-                )
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = {
-                        expanded = false
-                    }
-                ) {
-                    options.forEach { selectionOption ->
-                        DropdownMenuItem(
-                            onClick = {
-                                selectedOptionText = selectionOption
-                                expanded = false
-                            }
-                        ) {
-                            Text(text = selectionOption)
-                        }
-                    }
-                }
-            }
+//
+//             ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = {
+//                expanded = !expanded
+//            }) {
+//                TextField(modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(start = 16.dp)
+//                    .padding(end = 16.dp),
+//
+//                    readOnly = true,
+//                    value = selectedOptionText,
+//                    onValueChange = { },
+//                    label = { Text(text = "Статус") },
+//                    trailingIcon = {
+//                        ExposedDropdownMenuDefaults.TrailingIcon(
+//                            expanded = expanded
+//                        )
+//                    },
+//                    colors = TextFieldDefaults.textFieldColors(
+//                        cursorColor = Color.DarkGray,
+//                        disabledLabelColor = Color.DarkGray,
+//                        focusedLabelColor = Color.DarkGray,
+//                        placeholderColor = Color.DarkGray,
+//                        focusedIndicatorColor = Color.DarkGray
+//
+//                    )
+//                )
+//                DropdownMenu(expanded = expanded, onDismissRequest = {
+//                    expanded = false
+//                }) {
+//                    options.forEach { selectionOption ->
+//                        DropdownMenuItem(onClick = {
+//                            selectedOptionText = selectionOption
+//                            expanded = false
+//                        }) {
+//                            Text(text = selectionOption)
+//                        }
+//                    }
+//                }
+//            }
             Spacer(modifier = Modifier.height(18.dp))
 
             //button
@@ -137,52 +139,84 @@ fun AddScreen(navController: NavController) {
                 .fillMaxWidth()
                 .padding(start = 16.dp)
                 .padding(end = 16.dp)
-                .height(50.dp),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.LightGray
-                ),
-                onClick = {
-                    buttonLoading = true
-                    viewModel.addOrder(
-                        data = hashMapOf(
-                            "phone" to phone.value.toString(),
-                            "address" to address.value.toString(),
-                            "comment" to comment.value.toString(),
-                            "count" to count.value.toString().toInt(),
-                            "total" to total.value.toString().toInt(),
-                            "status" to selectedOptionText.toString(),
-
-                            ),
-                        success = {
-                            buttonLoading = false
-
-                            showToast(context, "изменения сохранены")
-
-
-                            navController.popBackStack()
-                        },
-                        failure = { buttonLoading = false }
+                .height(50.dp), colors = ButtonDefaults.buttonColors(
+                backgroundColor = Color.LightGray,
+            ), enabled = buttonLoading, onClick = {
+                if (!validate(
+                        phone.value, address.value
                     )
+                ) return@Button showToast(context, "Заполните обязательные поля")
+                if (count.value != "" && count.value.toInt() > 0) {
+                    Log.e(TAG, "AddScreen: true")
+                    take = true
                 }
-            ) {
+
+                buttonLoading = false
+
+                val order = Order()
+                order.phone = phone.value
+                order.address = address.value
+                order.comment = comment.value
+                if (take) {
+                    order.status = Constants.TAKEN
+                    order.taken_time = FieldValue.serverTimestamp()
+                    order.created_time = FieldValue.serverTimestamp()
+                    order.count = count.value.toInt()
+
+                } else {
+                    order.status = Constants.CREATED
+                    order.created_time = FieldValue.serverTimestamp()
+                    order.count = 0
+
+                }
+
+                viewModel.addOrder(order,
+                    success = {
+                        buttonLoading = true
+                        showToast(context, "Заказ успешно добавлен")
+
+
+                    },
+                    failure = {
+                        buttonLoading = true
+                        showToast(context, "что то пошло не так")
+
+                    })
+            }) {
                 Text(
-                    text = if (!buttonLoading) {
+                    text = if (buttonLoading) {
                         "Сохранить"
                     } else {
                         ""
                     }
                 )
 
-                if (buttonLoading) CircularProgressIndicator(
-                    modifier = Modifier.size(30.dp),
-                    color = Color.DarkGray,
-                    strokeWidth = 2.dp
-                )
+                if (!buttonLoading) {
+
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(30.dp), color = Color.DarkGray, strokeWidth = 2.dp
+                    )
+                }
             }
         }
 
     }
 
+}
+
+fun validate(phone: String, address: String): Boolean {
+    return when {
+        phone == "" -> {
+            false
+        }
+        address == "" -> {
+            false
+        }
+
+        else -> {
+            true
+        }
+    }
 }
 
 fun showToast(context: Context, text: String) {
@@ -197,7 +231,8 @@ private fun OrderEditCustomTextFieldDigits(
     text: MutableState<String>,
     description: String,
     digits: Boolean = false,
-    inputType: KeyboardType = KeyboardType.Text
+    inputType: KeyboardType = KeyboardType.Text,
+    enable: Boolean = true
 ) {
 
     TextField(
@@ -206,6 +241,7 @@ private fun OrderEditCustomTextFieldDigits(
             .padding(start = 16.dp)
             .padding(end = 16.dp),
         value = text.value,
+        enabled = enable,
         onValueChange = { v ->
             text.value = if (digits) {
                 v.filter { it.isDigit() }
@@ -213,9 +249,9 @@ private fun OrderEditCustomTextFieldDigits(
             } else {
                 v
             }
-        }, keyboardOptions = KeyboardOptions(
-            keyboardType = inputType,
-            imeAction = ImeAction.Next
+        },
+        keyboardOptions = KeyboardOptions(
+            keyboardType = inputType, imeAction = ImeAction.Next
         ),
         label = { Text(text = description) },
         colors = TextFieldDefaults.textFieldColors(
@@ -230,44 +266,9 @@ private fun OrderEditCustomTextFieldDigits(
     )
 }
 
-@Composable
-fun OrderEditTopBarComponent(navController: NavController) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(50.dp)
-            .background(Color.White),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Row(
-            modifier = Modifier
 
-        ) {
-            IconButton(
-                onClick = { navController.popBackStack() }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Close, contentDescription = "Close icon button"
-                )
-            }
-        }
-        Row(
-            modifier = Modifier
-        ) {
-            Text(
-                modifier = Modifier,
-                style = MaterialTheme.typography.h6,
-                text = "Редактировать Заказ"
-            )
-        }
-        Row(
-            modifier = Modifier
-        ) {
 
-        }
-    }
-}
+
 
 
 
