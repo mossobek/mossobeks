@@ -1,0 +1,271 @@
+{
+  "project_info": {
+    "project_number": "643196191350",
+    "project_id": "parus-d3551",
+    "storage_bucket": "parus-d3551.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:643196191350:android:ac96fe2ba9bfb2679f9557",
+        "android_client_info": {
+          "package_name": "com.stirkaparus.admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "643196191350-8t629a18v19blinh9rrfc1mrpcos34rg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyqX4l8QBTJKXAqw3hiA5AnYIdVwiPx80"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "643196191350-8t629a18v19blinh9rrfc1mrpcos34rg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:643196191350:android:7987fd484667bef79f9557",
+        "android_client_info": {
+          "package_name": "com.stirkaparus.cleaner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "643196191350-8t629a18v19blinh9rrfc1mrpcos34rg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyqX4l8QBTJKXAqw3hiA5AnYIdVwiPx80"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "643196191350-8t629a18v19blinh9rrfc1mrpcos34rg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:643196191350:android:590f6d9545580b289f9557",
+        "android_client_info": {
+          "package_name": "com.stirkaparus.driver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "643196191350-8t629a18v19blinh9rrfc1mrpcos34rg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyqX4l8QBTJKXAqw3hiA5AnYIdVwiPx80"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "643196191350-8t629a18v19blinh9rrfc1mrpcos34rg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:643196191350:android:799f8af8cd70e7bb9f9557",
+        "android_client_info": {
+          "package_name": "com.stirkaparus.driverparus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "643196191350-8t629a18v19blinh9rrfc1mrpcos34rg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyqX4l8QBTJKXAqw3hiA5AnYIdVwiPx80"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "643196191350-8t629a18v19blinh9rrfc1mrpcos34rg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:643196191350:android:6e7ba5bef1c425ac9f9557",
+        "android_client_info": {
+          "package_name": "com.stirkaparus.pa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "643196191350-8t629a18v19blinh9rrfc1mrpcos34rg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyqX4l8QBTJKXAqw3hiA5AnYIdVwiPx80"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "643196191350-8t629a18v19blinh9rrfc1mrpcos34rg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:643196191350:android:2121e09b202053029f9557",
+        "android_client_info": {
+          "package_name": "com.stirkaparus.parusadmin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "643196191350-8t629a18v19blinh9rrfc1mrpcos34rg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyqX4l8QBTJKXAqw3hiA5AnYIdVwiPx80"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "643196191350-8t629a18v19blinh9rrfc1mrpcos34rg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:643196191350:android:3082a83245b92b809f9557",
+        "android_client_info": {
+          "package_name": "com.stirkaparus.parusadministrator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "643196191350-8t629a18v19blinh9rrfc1mrpcos34rg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyqX4l8QBTJKXAqw3hiA5AnYIdVwiPx80"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "643196191350-8t629a18v19blinh9rrfc1mrpcos34rg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:643196191350:android:4931110f7b7d59059f9557",
+        "android_client_info": {
+          "package_name": "com.stirkaparus.pdriverjc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "643196191350-8t629a18v19blinh9rrfc1mrpcos34rg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyqX4l8QBTJKXAqw3hiA5AnYIdVwiPx80"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "643196191350-8t629a18v19blinh9rrfc1mrpcos34rg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:643196191350:android:4669bfddf4821d679f9557",
+        "android_client_info": {
+          "package_name": "com.stirkaparus.stirkaparus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "643196191350-8t629a18v19blinh9rrfc1mrpcos34rg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyqX4l8QBTJKXAqw3hiA5AnYIdVwiPx80"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "643196191350-8t629a18v19blinh9rrfc1mrpcos34rg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
