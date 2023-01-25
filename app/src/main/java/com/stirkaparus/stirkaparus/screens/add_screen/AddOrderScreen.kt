@@ -160,12 +160,12 @@ fun AddScreen(navController: NavController) {
                 if (take) {
                     order.status = Constants.TAKEN
                     order.taken_time = FieldValue.serverTimestamp()
-                    order.created_time = FieldValue.serverTimestamp()
+                    order.create_time = FieldValue.serverTimestamp()
                     order.count = count.value.toInt()
 
                 } else {
                     order.status = Constants.CREATED
-                    order.created_time = FieldValue.serverTimestamp()
+                    order.create_time = FieldValue.serverTimestamp()
                     order.count = 0
 
                 }

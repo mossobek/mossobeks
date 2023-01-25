@@ -187,6 +187,7 @@ sealed class OrderDetailsScreen1(val route: String) {
 
     object OrderDetails : OrderDetailsScreen1(route = "ORDER_DETAIL")
     object Edit1 : OrderDetailsScreen1(route = "EDIT1")
+    object Carpets : OrderDetailsScreen1(route = "CARPETS")
 }
 
 

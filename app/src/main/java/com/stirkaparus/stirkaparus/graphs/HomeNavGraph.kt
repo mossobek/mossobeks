@@ -24,7 +24,7 @@ fun HomeNavGraph(navController: NavHostController, paddingValue: PaddingValues) 
         composable(route = BottomBarScreen.Home.route) {
             OrdersScreen(navController = navController,paddingValue)
 //            ScreenContent(name = BottomBarScreen.Home.route,
-//                 onClick = {aaaaas
+//                 onClick = {
 //                 navController.navigate(Graph.DETAILS)
 //             })
         }

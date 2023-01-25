@@ -115,8 +115,9 @@ fun OrderDetailsScreen(navController: NavController) {
                 icon = Icons.Default.AutoAwesomeMotion,
                 secondIcon = Icons.Default.AddBox,
                 onClick = {
-
-                }
+                    navController.navigate(OrderDetailsScreen1.Carpets.route + "/${id}")
+                },
+                clickable = true
             )
             Spacer(modifier = Modifier.height(2.dp))
             CustomTextFieldRow(
@@ -127,7 +128,7 @@ fun OrderDetailsScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(20.dp))
             CustomTextFieldRow(
                 description = "Создан",
-                text = formatDate(order.created_time),
+                text = formatDate(order.create_time),
                 paddingStart = 16.dp
             )
             Spacer(modifier = Modifier.height(2.dp))

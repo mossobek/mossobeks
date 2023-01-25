@@ -1,11 +1,13 @@
 package com.stirkaparus.stirkaparus.screens.orders_list_screen
 
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.unit.Constraints
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
+import com.stirkaparus.stirkaparus.common.Constants
 import com.stirkaparus.stirkaparus.model.Order
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
@@ -21,7 +23,7 @@ class OrdersViewModel(
     private val db = Firebase.firestore
 
     fun fetchPosts() = callbackFlow {
-        val collection = db.collection("orders")
+        val collection = db.collection(Constants.ORDERS)
 
         val snapshotListener = collection
             //.orderBy("phone", Query.Direction.DESCENDING)

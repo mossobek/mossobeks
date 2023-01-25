@@ -1,6 +1,7 @@
 package com.stirkaparus.stirkaparus.screens.order_details_screen.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -28,10 +29,16 @@ fun CustomTextFieldRow(
     iconDesc: String = "",
     secondIconDesc: String = "",
     paddingStart: Dp = 6.dp,
-    onClick: () -> Unit? ={}
+    onClick: () -> Unit? = {},
+    clickable:Boolean = false
 ) {
     Row(
         modifier = Modifier
+            .clickable(
+                enabled = clickable,
+                onClick = { onClick() }
+            )
+
             .fillMaxWidth()
             .height(35.dp)
             .background(Color.White),

@@ -1,12 +1,9 @@
 package com.stirkaparus.stirkaparus.screens.order_details_screen.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Circle
 import androidx.compose.runtime.Composable
@@ -18,6 +15,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import com.stirkaparus.stirkaparus.screens.orders_list_screen.components.Status
 import com.stirkaparus.stirkaparus.screens.orders_list_screen.components.StatusData
 import com.stirkaparus.stirkaparus.ui.theme.OrderDetailsDescriptionColor
 import com.stirkaparus.stirkaparus.ui.theme.PhoneNumberBoxBackground
@@ -113,8 +112,6 @@ fun OrderDetailsStatusComponent(
 
     }
 }
-
-
 
 
 
