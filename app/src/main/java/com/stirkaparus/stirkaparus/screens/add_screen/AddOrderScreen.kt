@@ -91,47 +91,6 @@ fun AddScreen(navController: NavController) {
             )
             Spacer(modifier = Modifier.height(8.dp))
 
-
-//
-//             ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = {
-//                expanded = !expanded
-//            }) {
-//                TextField(modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(start = 16.dp)
-//                    .padding(end = 16.dp),
-//
-//                    readOnly = true,
-//                    value = selectedOptionText,
-//                    onValueChange = { },
-//                    label = { Text(text = "Статус") },
-//                    trailingIcon = {
-//                        ExposedDropdownMenuDefaults.TrailingIcon(
-//                            expanded = expanded
-//                        )
-//                    },
-//                    colors = TextFieldDefaults.textFieldColors(
-//                        cursorColor = Color.DarkGray,
-//                        disabledLabelColor = Color.DarkGray,
-//                        focusedLabelColor = Color.DarkGray,
-//                        placeholderColor = Color.DarkGray,
-//                        focusedIndicatorColor = Color.DarkGray
-//
-//                    )
-//                )
-//                DropdownMenu(expanded = expanded, onDismissRequest = {
-//                    expanded = false
-//                }) {
-//                    options.forEach { selectionOption ->
-//                        DropdownMenuItem(onClick = {
-//                            selectedOptionText = selectionOption
-//                            expanded = false
-//                        }) {
-//                            Text(text = selectionOption)
-//                        }
-//                    }
-//                }
-//            }
             Spacer(modifier = Modifier.height(18.dp))
 
             //button
@@ -160,12 +119,12 @@ fun AddScreen(navController: NavController) {
                 if (take) {
                     order.status = Constants.TAKEN
                     order.taken_time = FieldValue.serverTimestamp()
-                    order.create_time = FieldValue.serverTimestamp()
+                    order.created_time = FieldValue.serverTimestamp()
                     order.count = count.value.toInt()
 
                 } else {
                     order.status = Constants.CREATED
-                    order.create_time = FieldValue.serverTimestamp()
+                    order.created_time = FieldValue.serverTimestamp()
                     order.count = 0
 
                 }
@@ -173,12 +132,17 @@ fun AddScreen(navController: NavController) {
                 viewModel.addOrder(order,
                     success = {
                         buttonLoading = true
+                        phone.value = ""
+                        address.value = ""
+                        comment.value = ""
+                        count.value = ""
                         showToast(context, "Заказ успешно добавлен")
 
 
                     },
                     failure = {
                         buttonLoading = true
+
                         showToast(context, "что то пошло не так")
 
                     })

@@ -48,7 +48,7 @@ fun OrderItem(
             .background(Color.White)
 
     ) {
-        if(order.create_time ==null){
+        if(order.created_time ==null){
             Log.e(TAG, "OrderItem: ${order.id}", )
         }
 
@@ -164,13 +164,13 @@ fun OrderItem(
                         )
                     Text(
                         modifier = Modifier.padding(start = 4.dp),
-                        text = viewModel.getAgoTime(order.create_time as Timestamp),
+                        text = viewModel.getAgoTime(order.created_time as Timestamp),
 
                         color = Color.DarkGray
 
                     )
 
-                    Log.e(TAG, "OrderItem: ${order.create_time}")
+                    Log.e(TAG, "OrderItem: ${order.created_time}")
                 }
                 Row(
                     modifier = Modifier.weight(1f),
@@ -348,7 +348,7 @@ fun setStatus(status: String, order: Order): StatusData {
             statusData.also {
                 statusData.text = Constants.CREATED_RU
                 statusData.color = BlueStatusColor
-                statusData.timestamp = order.create_time
+                statusData.timestamp = order.created_time
             }
         }
         Status.Taken.status -> {

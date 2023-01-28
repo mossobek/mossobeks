@@ -11,7 +11,7 @@ data class Order(
     var comment: String? = "",
     var count: Int? = 0,
     var washed_count: Int? = 0,
-    var create_time: Any? = null,
+    var created_time: Any? = null,
     var taken_time: Any? = null,
     var delivered_time: Any? = null,
     var washed_time: Any? = null,

@@ -21,6 +21,7 @@ import com.stirkaparus.stirkaparus.ui.theme.OrderDetailsDescriptionColor
 
 @Composable
 fun CustomTextFieldRow(
+    visibleAddButton :Boolean = false,
     text: String = "Text",
     description: String = "description",
     textColor: Color = Color.Black,
@@ -30,7 +31,8 @@ fun CustomTextFieldRow(
     secondIconDesc: String = "",
     paddingStart: Dp = 6.dp,
     onClick: () -> Unit? = {},
-    clickable:Boolean = false
+    clickable:Boolean = false,
+    secondIconOnClick:()->Unit  ={}
 ) {
     Row(
         modifier = Modifier
@@ -87,7 +89,7 @@ fun CustomTextFieldRow(
                 IconButton(modifier = Modifier
                     //.padding(start = 10.dp)
                     .padding(end = 10.dp),
-                    onClick = { /*TODO*/ }) {
+                    onClick = { secondIconOnClick() }) {
 
                     Icon(
                         modifier = Modifier

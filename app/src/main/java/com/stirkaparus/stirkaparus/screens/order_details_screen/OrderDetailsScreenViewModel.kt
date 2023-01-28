@@ -2,6 +2,8 @@ package com.stirkaparus.stirkaparus.screens.order_details_screen
 
 import android.content.ContentValues.TAG
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.SetOptions
@@ -15,6 +17,10 @@ import kotlinx.coroutines.flow.callbackFlow
 
 class OrderDetailsScreenViewModel() : ViewModel() {
     private val db = Firebase.firestore
+
+    private val _changeButtonClicked: MutableLiveData<Boolean> = MutableLiveData()
+    val changeButtonClicked: LiveData<Boolean> = _changeButtonClicked
+
 
     fun getOrder(
         productId: String
@@ -42,47 +48,30 @@ class OrderDetailsScreenViewModel() : ViewModel() {
     }
 
     fun deleteOrder(
-        id: String?,
-        success: () -> Unit,
-        failure: () -> Unit
+        id: String?, success: () -> Unit, failure: () -> Unit
     ) {
-        db.collection("orders").document(id.toString())
-            .set(
-                hashMapOf(
-                    "status" to "deleted",
-                    "delete_time" to FieldValue.serverTimestamp()
-                ),
-                SetOptions.merge()
-            )
-            .addOnSuccessListener { success() }
-            .addOnFailureListener { failure() }
+        db.collection("orders").document(id.toString()).set(
+            hashMapOf(
+                "status" to "deleted", "delete_time" to FieldValue.serverTimestamp()
+            ), SetOptions.merge()
+        ).addOnSuccessListener { success() }.addOnFailureListener { failure() }
     }
 
     fun changeStatus(
-        id: String?,
-        status: String,
-        success: () -> Unit,
-        failure: () -> Unit
+        id: String?, status: String, success: () -> Unit, failure: () -> Unit
     ) {
         Log.e(TAG, "OrderDetailsScreen:$id + $status")
-        db.collection(Constants.ORDERS).document(id.toString())
-            .set(
-                hashMapOf(
-                    "status" to status,
-                    status+"_time" to FieldValue.serverTimestamp()
-                ),
-                SetOptions.merge()
-            )
-            .addOnSuccessListener { success() }
-            .addOnFailureListener { failure() }
+        db.collection(Constants.ORDERS).document(id.toString()).set(
+            hashMapOf(
+                "status" to status, status + "_time" to FieldValue.serverTimestamp()
+            ), SetOptions.merge()
+        ).addOnSuccessListener { success() }.addOnFailureListener { failure() }
     }
 
 }
 
 enum class Status {
-    SUCCESS,
-    ERROR,
-    LOADING
+    SUCCESS, ERROR, LOADING
 }
 
 data class Resource<out T>(val status: Status, val data: T?, val message: String?) {
