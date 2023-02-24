@@ -17,6 +17,7 @@ val RedStatusColor = Color(0xFFFB0F0F)
 
 
 val LightGray = Color(0xFFBBDEFB)
+val LightBlue = Color(0xFFD7E5FE)
 
 //
 val BackgroundColor = Color(0xFFF5F5F5)

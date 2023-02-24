@@ -19,21 +19,22 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.stirkaparus.model.Order
+import com.stirkaparus.stirkaparus.common.Constants.COUNT_RU
+import com.stirkaparus.stirkaparus.common.Constants.PHONE_RU
+import com.stirkaparus.stirkaparus.common.Constants.TOTAL_RU
 import com.stirkaparus.stirkaparus.presentation.TopBarComponent
-import com.stirkaparus.stirkaparus.presentation.order_details_screen.OrderDetailsScreenViewModel
-import com.stirkaparus.stirkaparus.presentation.order_details_screen.Resource
+import com.stirkaparus.stirkaparus.presentation.order_details.OrderDetailsViewModel
+import com.stirkaparus.stirkaparus.presentation.order_details.Resource
 
 @OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun OrderEditScreen(navController: NavController) {
+
     val id = navController.currentBackStackEntry?.arguments?.getString("id")
 
-    val viewModel: OrderDetailsScreenViewModel = OrderDetailsScreenViewModel()
-    val orderResource by viewModel.getOrder(id.toString())
-        .collectAsState(initial = Resource.loading(null))
-    val order = orderResource.data ?: Order()
 
+    val order =  Order()
     val editViewModel = OrderEditViewModel()
     val context = LocalContext.current
 
@@ -54,6 +55,7 @@ fun OrderEditScreen(navController: NavController) {
     val options = listOf("created", "taken", "washed", "finished", "delivered")
     var selectedOptionText by remember { mutableStateOf(options[0]) }
 
+
     Scaffold(modifier = Modifier) {
 
         Column(
@@ -71,7 +73,7 @@ fun OrderEditScreen(navController: NavController) {
 
             OrderEditCustomTextFieldDigits(
                 phone,
-                description = "Телефон",
+                description = PHONE_RU,
                 digits = true,
                 inputType = KeyboardType.Decimal
             )
@@ -82,14 +84,14 @@ fun OrderEditScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(8.dp))
             OrderEditCustomTextFieldDigits(
                 count,
-                description = "Количество",
+                description = COUNT_RU,
                 true,
                 inputType = KeyboardType.Decimal
             )
             Spacer(modifier = Modifier.height(8.dp))
             OrderEditCustomTextFieldDigits(
                 total,
-                description = "Сумма",
+                description = TOTAL_RU,
                 true,
                 inputType = KeyboardType.Decimal
             )

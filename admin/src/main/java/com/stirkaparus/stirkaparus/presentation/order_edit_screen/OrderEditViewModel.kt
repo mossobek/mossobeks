@@ -7,7 +7,7 @@ import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.stirkaparus.model.Order
-import com.stirkaparus.stirkaparus.presentation.order_details_screen.Resource
+import com.stirkaparus.stirkaparus.presentation.order_details.Resource
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 

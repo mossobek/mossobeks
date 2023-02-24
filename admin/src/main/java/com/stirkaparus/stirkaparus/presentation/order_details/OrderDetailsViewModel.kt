@@ -1,52 +1,69 @@
-package com.stirkaparus.stirkaparus.presentation.order_details_screen
+package com.stirkaparus.stirkaparus.presentation.order_details
 
 import android.content.ContentValues.TAG
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.stirkaparus.model.Response
 import com.stirkaparus.stirkaparus.common.Constants
-import com.stirkaparus.model.Order
+import com.stirkaparus.stirkaparus.domain.repository.OrderDetailsRepository
+import com.stirkaparus.stirkaparus.domain.repository.OrderResponse
 import com.stirkaparus.stirkaparus.presentation.orders_list_screen.Status
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.callbackFlow
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class OrderDetailsScreenViewModel() : ViewModel() {
+@HiltViewModel
+class OrderDetailsViewModel @Inject constructor(
+    private val repo: OrderDetailsRepository
+) : ViewModel() {
     private val db = Firebase.firestore
+//
+//    private var _orderStatus: MutableLiveData<String> = MutableLiveData()
+//    val orderStatus: LiveData<String> = _orderStatus
 
-    private var _orderStatus: MutableLiveData<String> = MutableLiveData()
-    val orderStatus: LiveData<String> = _orderStatus
-
+    var orderDetailsResponse by mutableStateOf<OrderResponse>(Response.Loading)
+        private set
 
     fun getOrder(
-        productId: String
-    ) = callbackFlow {
-        val productIdRef = db.collection(Constants.ORDERS).document(productId)
-        val snapshotListener = productIdRef.addSnapshotListener { snapshot, e ->
-            val productResponse = if (snapshot != null) {
-                val product = snapshot.toObject(Order::class.java)
-                     _orderStatus.value = product?.status.toString()
-
-                Log.e(TAG, "getProductFromFirestore: $product")
-
-                Resource.success(product)
-
-
-            } else {
-
-                Resource.error(e?.message.toString(), null)
-
-            }
-            trySend(productResponse)
-        }
-        awaitClose {
-            snapshotListener.remove()
+        id: String
+    ) = viewModelScope.launch {
+        repo.getOrderFromFirestore(id).collect { response ->
+            orderDetailsResponse = response
         }
     }
+
+//    callbackFlow
+//    {
+//        val productIdRef = db.collection(Constants.ORDERS).document(productId)
+//        val snapshotListener = productIdRef.addSnapshotListener { snapshot, e ->
+//            val productResponse = if (snapshot != null) {
+//                val product = snapshot.toObject(Order::class.java)
+//                _orderStatus.value = product?.status.toString()
+//
+//                Log.e(TAG, "getProductFromFirestore: $product")
+//
+//                Resource.success(product)
+//
+//
+//            } else {
+//
+//                Resource.error(e?.message.toString(), null)
+//
+//            }
+//            trySend(productResponse)
+//        }
+//        awaitClose {
+//            snapshotListener.remove()
+//        }
+//    }
 
     fun deleteOrder(
         id: String?, success: () -> Unit, failure: () -> Unit

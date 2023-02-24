@@ -7,7 +7,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.stirkaparus.stirkaparus.BottomBarScreen
 import com.stirkaparus.stirkaparus.presentation.DashScreen
-import com.stirkaparus.stirkaparus.presentation.ScreenContent
 import com.stirkaparus.stirkaparus.presentation.add_screen.AddScreen
 import com.stirkaparus.stirkaparus.presentation.orders_list_screen.OrdersScreen
 import com.stirkaparus.stirkaparus.presentation.profile.ProfileScreen
@@ -39,7 +38,15 @@ fun HomeNavGraph(navController: NavHostController, paddingValue: PaddingValues) 
         }
         composable(route = BottomBarScreen.Reports.route) {
             ReportsScreen(
-                navController = navController, paddingValue
+                navController = navController,
+                bottomPadding = paddingValue,
+                navigateToOrderDetailsScreen = { orderId ->
+                    navController.navigate("${ReportsScreens.ReportOrderDetails.route}/${orderId}")
+                },
+                onSearchIconClick = {
+                    navController.navigate(ReportsScreens.ReportSearch.route)
+
+                },
             )
 
         }
@@ -56,7 +63,7 @@ fun HomeNavGraph(navController: NavHostController, paddingValue: PaddingValues) 
 
         orderNavGraph(navController = navController)
         profileNavGraph(navController = navController)
+        reportsNavGraph(navController = navController)
 
     }
 }
-

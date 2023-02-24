@@ -28,7 +28,7 @@ import androidx.navigation.NavHostController
 import com.stirkaparus.stirkaparus.graphs.Graph
 import com.stirkaparus.model.Order
 import com.stirkaparus.stirkaparus.presentation.ProgressDialog
-import com.stirkaparus.stirkaparus.presentation.order_details_screen.OrderDetailsScreenViewModel
+import com.stirkaparus.stirkaparus.presentation.order_details.OrderDetailsViewModel
 import com.stirkaparus.stirkaparus.presentation.order_edit_screen.showToast
 import com.stirkaparus.stirkaparus.presentation.orders_list_screen.components.OrderItem
 import com.stirkaparus.stirkaparus.presentation.orders_list_screen.components.SortSection
@@ -43,7 +43,6 @@ fun OrdersScreen(
 ) {
 
     val context = LocalContext.current
-    val viewModelEditText = OrderDetailsScreenViewModel()
 
     val filterList: List<String> = listOf("created", "taken")
      val postsResource by viewModel.fetchPosts().collectAsState(initial = Resource.loading(null))
@@ -173,17 +172,17 @@ fun OrdersScreen(
                             onDeleteItemMenuClick = {
 
                                 loading = true
-                                viewModelEditText.deleteOrder(
-                                    order.id,
-                                    success = {
-                                        showToast(context, "Заказ удален!")
-                                        loading = false
-                                    },
-                                    failure = {
-                                        showToast(context, "Что то пошло не так...")
-                                        loading = false
-
-                                    })
+//                                viewModelEditText.deleteOrder(
+//                                    order.id,
+//                                    success = {
+//                                        showToast(context, "Заказ удален!")
+//                                        loading = false
+//                                    },
+//                                    failure = {
+//                                        showToast(context, "Что то пошло не так...")
+//                                        loading = false
+//
+//                                    })
 
 
                             },

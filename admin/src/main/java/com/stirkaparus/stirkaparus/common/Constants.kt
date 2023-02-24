@@ -27,7 +27,7 @@ object Constants {
 
     //user
     const val ROLE: String = "role"
-     const val NAME: String = "name"
+    const val NAME: String = "name"
 
     const val STATUS: String = "status"
     const val REPORTED: String = "reported"
@@ -82,7 +82,7 @@ object Constants {
     const val LOGGED_IN_USERNAME: String = "logged_in_username"
 
 
-    const val USER: String = "users"
+    const val USER: String = "user"
 
     const val ORDER_ID: String = "orderId"
     const val ID: String = "id"
@@ -120,7 +120,15 @@ object Constants {
     const val VERTICAL_DIVIDER = "|"
 
     //Texts
+    const val EDIT_ORDER_TOP_BAR_TEXT_RU = "Детали заказа"
     const val PHONE_RU = "Телефон"
+    const val ADDRESS_RU = "Адрес"
+    const val COMMENT_RU = "Комментарий"
+    const val STATUS_RU = "Статус"
+    const val COUNT_RU = "Количество"
+    const val OF_THEM_WASHED = "Из них постирано"
+    const val TOTAL_RU = "Сумма"
+    const val NO_SEARCH = ""
     const val FORGOT_PASSWORD = "Забыли пароль?"
     const val NO_ACCOUNT = "Нет аккаунта? Создать."
     const val ALREADY_USER = "Уже зарегистрированы? Войти."

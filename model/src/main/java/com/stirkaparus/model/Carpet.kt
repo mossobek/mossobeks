@@ -10,7 +10,8 @@ data class Carpet(
     var id: String? = "",
     var orderId: String? = "",
     var status: String? = "",
-
+    var company_id: String? = "",
+    var user: String? = "",
 
     ) {
 }

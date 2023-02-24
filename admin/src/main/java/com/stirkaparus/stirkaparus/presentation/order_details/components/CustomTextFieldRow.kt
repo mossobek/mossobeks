@@ -1,4 +1,4 @@
-package com.stirkaparus.stirkaparus.presentation.order_details_screen.components
+package com.stirkaparus.stirkaparus.presentation.order_details.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

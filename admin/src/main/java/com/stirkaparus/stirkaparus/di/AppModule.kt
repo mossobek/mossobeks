@@ -5,15 +5,13 @@ import android.content.SharedPreferences
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.stirkaparus.stirkaparus.common.Constants.DELIVERED_TIME
 import com.stirkaparus.stirkaparus.common.Constants.ORDERS
-import com.stirkaparus.stirkaparus.data.repository.AuthRepositoryImpl
-import com.stirkaparus.stirkaparus.data.repository.OrdersRepositoryImpl
-import com.stirkaparus.stirkaparus.data.repository.UserRepositoryImpl
-import com.stirkaparus.stirkaparus.domain.repository.AuthRepository
-import com.stirkaparus.stirkaparus.domain.repository.OrdersRepository
-import com.stirkaparus.stirkaparus.domain.repository.UserRepository
+import com.stirkaparus.stirkaparus.data.repository.*
+import com.stirkaparus.stirkaparus.domain.repository.*
 import com.stirkaparus.stirkaparus.useCases.GetCreatedOrders
 import com.stirkaparus.stirkaparus.useCases.UseCases
 import dagger.Module
@@ -36,7 +34,7 @@ object AppModule {
     fun provideOrdersRepository(
         ordersRef: CollectionReference,
         db: FirebaseFirestore
-    ): OrdersRepository = OrdersRepositoryImpl(ordersRef,db)
+    ): OrdersRepository = OrdersRepositoryImpl(ordersRef, db)
 
     @Provides
     fun provideUseCases(
@@ -68,4 +66,33 @@ object AppModule {
         db = Firebase.firestore
 
     )
+
+    @Provides
+    fun provideOrderDetailsRepository(
+        firebaseFirestore: FirebaseFirestore,
+    ): OrderDetailsRepository = OrderDetailsRepositoryImpl(
+        firebaseFirestore = firebaseFirestore,
+        auth = Firebase.auth,
+    )
+
+    @Provides
+    fun provideOrdersQuery(
+        db: FirebaseFirestore
+    ) = db.collection(ORDERS)
+        .orderBy(DELIVERED_TIME, Query.Direction.ASCENDING)
+
+
+    @Provides
+    fun provideReportsRepository(
+        ordersQuery: Query
+    ): ReportsRepository = ReportsRepositoryImpl(ordersQuery)
+
+    @Provides
+    fun provideCarpetsRepository(
+        firebaseFirestore: FirebaseFirestore,
+    ): CarpetsRepository = CarpetsRepositoryImpl(
+        firebaseFirestore = firebaseFirestore
+    )
+
+
 }

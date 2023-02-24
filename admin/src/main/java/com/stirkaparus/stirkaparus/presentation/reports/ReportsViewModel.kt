@@ -15,6 +15,8 @@ import com.stirkaparus.stirkaparus.domain.repository.OrdersRepository
 import com.stirkaparus.stirkaparus.domain.repository.ReportsOrdersResponse
 import com.stirkaparus.model.Response
 import com.stirkaparus.model.User
+import com.stirkaparus.stirkaparus.domain.repository.ReportOrderListResponse
+import com.stirkaparus.stirkaparus.domain.repository.ReportsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,6 +24,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ReportsViewModel @Inject constructor(
+    private val repo: ReportsRepository,
     private val ordersRepo: OrdersRepository,
     private val prefs: SharedPreferences
 
@@ -29,11 +32,19 @@ class ReportsViewModel @Inject constructor(
     companion object {
         const val TAG = "ReportsViewModel"
     }
-    var selectedSpecimen by mutableStateOf(User())
-    var drivers: MutableLiveData<List<User>> = MutableLiveData<List<User>>()
+
+     var drivers: MutableLiveData<List<User>> = MutableLiveData<List<User>>()
 
     var reportsOrdersResponse by mutableStateOf<ReportsOrdersResponse>(Response.Loading)
         private set
+
+    var reportOrderListResponse by mutableStateOf<ReportOrderListResponse>(Response.Loading)
+    fun getOrderList(userId: String = "") = viewModelScope.launch {
+        Log.e(TAG, "getOrderList: $userId", )
+        repo.getReportsOrdersFromFirestore(userId).collect { response ->
+            reportOrderListResponse = response
+        }
+    }
 
 
     fun getReportsOrders() = viewModelScope.launch {
@@ -46,29 +57,29 @@ class ReportsViewModel @Inject constructor(
         val companyId = prefs.getString(
             COMPANY_ID, null
         )
-        FirebaseFirestore.getInstance().collection(USERS).whereEqualTo(
-            COMPANY_ID, companyId
-        ).addSnapshotListener { snapshot, e ->
-            if (e != null) {
-                Log.e(TAG, "getMutableDriversList: $e")
-                return@addSnapshotListener
-            }
-            snapshot?.let {
-                val allDrivers = ArrayList<User>()
-                allDrivers.add(User(name = "ALL ORDERS"))
-                val documents = snapshot.documents
-                documents.forEach {
-                    val driver = it.toObject(User::class.java)
-                    driver?.let {
-                        allDrivers.add(it)
-                    }
+        FirebaseFirestore.getInstance()
+            .collection(USERS)
+            .whereEqualTo(
+                COMPANY_ID, companyId
+            ).addSnapshotListener { snapshot, e ->
+                if (e != null) {
+                    Log.e(TAG, "getMutableDriversList: $e")
+                    return@addSnapshotListener
                 }
-                drivers.value = allDrivers
+                snapshot?.let {
+                    val allDrivers = ArrayList<User>()
+                    allDrivers.add(User(name = "ALL ORDERS"))
+                    val documents = snapshot.documents
+                    documents.forEach {
+                        val driver = it.toObject(User::class.java)
+                        driver?.let {
+                            allDrivers.add(it)
+                        }
+                    }
+                    drivers.value = allDrivers
+                }
             }
-        }
     }
-
-
 
 
 }

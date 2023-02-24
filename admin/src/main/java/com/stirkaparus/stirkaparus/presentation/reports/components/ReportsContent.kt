@@ -18,107 +18,53 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.stirkaparus.model.Order
 import com.stirkaparus.model.User
 import com.stirkaparus.stirkaparus.presentation.reports.ReportsViewModel
+import com.stirkaparus.stirkaparus.presentation.reports.TAG
 
 
 @Composable
-fun ReportsContent(
-    padding: PaddingValues,
-    bottomPadding: PaddingValues,
+fun SpecimenSpinner(
+    drivers: List<User>,
     viewModel: ReportsViewModel = hiltViewModel(),
-) {
-    var users by remember {
-        mutableStateOf<List<User>>(emptyList())
-    }
-
-
-    LaunchedEffect(Unit) {
-
-        viewModel.getReportsOrders()
-
-    }
-
-    ReportsOrder { orders ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-        ) {
-
-            viewModel.getMutableDriversList()
-
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(padding)
-            ) {
-
-                val drivers by viewModel.drivers.observeAsState(initial = emptyList())
-
-                SpecimenSpinner(drivers = drivers)
-
-
-
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight(),
-                    contentPadding = PaddingValues(8.dp)
-                ) {
-                    items(orders) { order ->
-                        ReportItemCard(
-                            item = order
-                        )
-
-                    }
-                }
-            }
-        }
-    }
-
-}
-
-@Composable
-fun SpecimenSpinner(drivers: List<User>, viewModel: ReportsViewModel = hiltViewModel()) {
-    val TAG = "SpecimenSpinner"
+ ) {
     var driverText by remember { mutableStateOf("Выберите отчеты") }
     var expanded by remember { mutableStateOf(false) }
     var selectedPlant: User? = null
-    var inPlantName: String = ""
 
     Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-        Row(Modifier
-            .padding(24.dp)
-            .clickable {
-                expanded = !expanded
-            }
-            .padding(8.dp),
+        Row(
+            Modifier
+                .padding(24.dp)
+                .clickable {
+                    expanded = !expanded
+                }
+                .padding(8.dp),
             horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+            verticalAlignment = Alignment.CenterVertically) {
             Text(text = driverText, fontSize = 18.sp, modifier = Modifier.padding(end = 8.dp))
             Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = "")
             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                 drivers.forEach { driver ->
                     DropdownMenuItem(onClick = {
                         expanded = false
-
                         if (driver.name == "ALL ORDERS") {
                             // we have a new driver
                             driverText = "ALL ORDERS"
                             driver.name = "ALL ORDERS"
+                            driver.id = ""
                             selectedPlant = User(name = "ALL ORDERS")
 
                         } else {
                             // we have selected an existing driver.
                             driverText = driver.name.toString()
                             selectedPlant = User(name = driver.name)
-                            inPlantName = driver.name!!
                         }
-                        viewModel.selectedSpecimen
-                        Log.e(TAG, "selectedSpecimen: $selectedPlant")
-                    }) {
+                        viewModel.getOrderList(userId = driver.id.toString())
+                        Log.e(TAG, "selectedSpecimen: ${driver.id.toString()}")
+                    }
+                    ) {
                         Text(text = driver.name.toString())
                     }
                 }

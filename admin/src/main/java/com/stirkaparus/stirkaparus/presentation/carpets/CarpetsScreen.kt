@@ -16,21 +16,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.stirkaparus.stirkaparus.presentation.ProgressDialog
-import com.stirkaparus.stirkaparus.presentation.carpets.components.AddCarpetAlertDialog
+import com.stirkaparus.stirkaparus.presentation.carpets.components.AddCarpetSheet
 import com.stirkaparus.stirkaparus.presentation.carpets.components.CarpetItem
-import com.stirkaparus.stirkaparus.presentation.order_details_screen.Resource
+import com.stirkaparus.stirkaparus.presentation.order_details.Resource
 import com.stirkaparus.stirkaparus.ui.theme.BackgroundColor
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun CarpetsScreen(navController: NavController) {
+fun CarpetsScreen(navController: NavController,
+viewModel: CarpetsViewModel = hiltViewModel()) {
     
     val id = navController.currentBackStackEntry?.arguments?.getString("id")
     var carpetAlertDialogState by remember { mutableStateOf(false) }
-    val viewModel = CarpetsViewModel()
-    val context = LocalContext.current
+     val context = LocalContext.current
     val carpetsResource by viewModel.fetchCarpets(id.toString())
         .collectAsState(initial = Resource.loading(null))
     val carpets = carpetsResource.data ?: emptyList()
@@ -40,11 +41,12 @@ fun CarpetsScreen(navController: NavController) {
 
 
 
-    if (carpetAlertDialogState) AddCarpetAlertDialog(id = id.toString(),
+    if (carpetAlertDialogState) AddCarpetSheet(id = id.toString(),
         viewModel = viewModel,
-        context = context,
-        onClick = {},
-        onDismiss = { carpetAlertDialogState = false })
+//        context = context,
+//        onClick = {},
+//        onDismiss = { carpetAlertDialogState = false }
+    )
 
     Scaffold(
         modifier = Modifier
