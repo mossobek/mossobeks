@@ -8,7 +8,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Lens
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,19 +15,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.stirkaparus.stirkaparus.common.Constants.CREATED
+import com.stirkaparus.stirkaparus.common.Constants.WASHED
 import com.stirkaparus.stirkaparus.presentation.components.SmallSpacer
+import com.stirkaparus.stirkaparus.presentation.order_details.OrderDetailsViewModel
 import com.stirkaparus.stirkaparus.presentation.orders_list_screen.components.Status
 
+const val TAG = "StatusChange"
 
 @Composable
 fun StatusChange(
-    currentSt: String? = "created",
-    onClick: (Status) -> Unit,
+    viewModel: OrderDetailsViewModel = hiltViewModel(),
+    id: String,
+    onOrderTakeClicked: () -> Unit
 ) {
 
     Column(
-        modifier = Modifier
-            .padding(16.dp)
+        modifier = Modifier.padding(16.dp)
     ) {
 
         Column(
@@ -46,29 +50,42 @@ fun StatusChange(
             SmallSpacer()
             Divider()
             TextCustomStatus(
-                status = Status.Created, currentSt, onClick = { onClick(Status.Created) }
-            )
+                status = Status.Created,
+                onClick = {
+                    viewModel.changeStatus(id = id, status = CREATED)
+                })
             SmallSpacer()
             Divider()
             TextCustomStatus(
-                status = Status.Taken, currentSt, onClick = { onClick(Status.Taken) }
-            )
+                status = Status.Taken,
+                onClick = {
+                    onOrderTakeClicked()
+                })
             SmallSpacer()
             Divider()
 
             TextCustomStatus(
-                status = Status.Washed, currentSt, onClick = { onClick(Status.Washed) }
-            )
+                status = Status.Washed,
+
+                onClick = {
+                    viewModel.changeStatus(id = id, status = WASHED)
+                })
             SmallSpacer()
             Divider()
             TextCustomStatus(
-                status = Status.Delivered, currentSt, onClick = { onClick(Status.Delivered) }
-            )
+                status = Status.Delivered,
+
+                onClick = {
+                    viewModel.openDeliveredDialog()
+                })
             SmallSpacer()
             Divider()
             TextCustomStatus(
-                status = Status.Finished, currentSt, onClick = { onClick(Status.Finished) }
-            )
+                status = Status.Finished,
+                //  currentSt,
+                onClick = {
+                    //onClick(Status.Finished)
+                })
             SmallSpacer()
             Divider()
         }
@@ -79,20 +96,17 @@ fun StatusChange(
 @Composable
 fun TextCustomStatus(
     status: Status,
-    currentStatus: String?,
+    //currentStatus: MutableState<String>,
     onClick: () -> Unit
 ) {
-    var check by remember { mutableStateOf(false) }
-    if (status.status == currentStatus) check = true
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() }
-            .height(35.dp)
-            .background(Color.White),
+
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .clickable { onClick() }
+        .height(35.dp)
+        .background(Color.White),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
+        horizontalArrangement = Arrangement.SpaceBetween) {
         Row(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
@@ -113,21 +127,6 @@ fun TextCustomStatus(
             )
         }
 
-        Row(
-            horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.CenterVertically
-        ) {
-
-            if (check) {
-
-                Icon(
-                    modifier = Modifier.size(26.dp),
-                    imageVector = Icons.Default.Check,
-                    tint = Color.Black,
-                    contentDescription = "desc"
-                )
-
-            }
-        }
 
     }
 }

@@ -8,6 +8,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.stirkaparus.stirkaparus.common.Constants.COMPANIES
 import com.stirkaparus.stirkaparus.common.Constants.DELIVERED_TIME
 import com.stirkaparus.stirkaparus.common.Constants.ORDERS
 import com.stirkaparus.stirkaparus.data.repository.*
@@ -19,13 +20,17 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
     @Provides
+
     fun provideOrdersRef() = Firebase.firestore.collection(ORDERS)
+
 
     @Provides
     fun provideFirebaseFirestore() = Firebase.firestore
@@ -33,7 +38,8 @@ object AppModule {
     @Provides
     fun provideOrdersRepository(
         ordersRef: CollectionReference,
-        db: FirebaseFirestore
+        db: FirebaseFirestore,
+
     ): OrdersRepository = OrdersRepositoryImpl(ordersRef, db)
 
     @Provides
@@ -70,9 +76,11 @@ object AppModule {
     @Provides
     fun provideOrderDetailsRepository(
         firebaseFirestore: FirebaseFirestore,
+        prefs: SharedPreferences
     ): OrderDetailsRepository = OrderDetailsRepositoryImpl(
         firebaseFirestore = firebaseFirestore,
         auth = Firebase.auth,
+        prefs = prefs
     )
 
     @Provides
@@ -84,8 +92,12 @@ object AppModule {
 
     @Provides
     fun provideReportsRepository(
-        ordersQuery: Query
-    ): ReportsRepository = ReportsRepositoryImpl(ordersQuery)
+        firebaseFirestore: FirebaseFirestore,
+        prefs: SharedPreferences
+    ): ReportsRepository = ReportsRepositoryImpl(
+        firebaseFirestore = firebaseFirestore,
+        prefs = prefs
+    )
 
     @Provides
     fun provideCarpetsRepository(

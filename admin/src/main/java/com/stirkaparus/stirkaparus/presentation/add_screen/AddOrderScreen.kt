@@ -18,9 +18,7 @@ fun AddScreen(
     viewModel: AddOrderViewModel = hiltViewModel()
 
 ) {
-    val success by remember {
-        mutableStateOf(false)
-    }
+
     Scaffold(
         topBar = {
             AddOrderTopBar()

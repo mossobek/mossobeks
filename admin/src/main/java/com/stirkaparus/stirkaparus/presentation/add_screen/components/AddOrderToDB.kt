@@ -11,7 +11,7 @@ import com.stirkaparus.stirkaparus.presentation.components.ProgressDialog
 fun AddOrderToDB(
     addOrderViewModel: AddOrderViewModel = hiltViewModel()
 ) {
-    when (val addOrderResponse = addOrderViewModel.addOrderInFirestoreResponse) {
+     when (val addOrderResponse = addOrderViewModel.addOrderInFirestoreResponse) {
         is Loading -> ProgressDialog()
         is Success -> Unit
         is Failure -> LaunchedEffect(Unit) {

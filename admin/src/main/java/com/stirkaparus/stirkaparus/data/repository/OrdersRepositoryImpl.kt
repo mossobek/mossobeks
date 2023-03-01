@@ -1,5 +1,6 @@
 package com.stirkaparus.stirkaparus.data.repository
 
+import android.content.SharedPreferences
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.stirkaparus.stirkaparus.common.Constants.COMPANY_ID
@@ -15,6 +16,8 @@ import com.stirkaparus.stirkaparus.domain.repository.OrdersRepository
 import com.stirkaparus.stirkaparus.domain.repository.ReportsOrdersResponse
 import com.stirkaparus.model.Order
 import com.stirkaparus.model.Response
+import com.stirkaparus.stirkaparus.common.Constants.COMPANIES
+import com.stirkaparus.stirkaparus.domain.repository.ReportUserOrderListResponse
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
@@ -25,13 +28,14 @@ import javax.inject.Singleton
 @Singleton
 class OrdersRepositoryImpl @Inject constructor(
     private val ordersRef: CollectionReference,
-    private val db: FirebaseFirestore
-) : OrdersRepository {
+    private val db: FirebaseFirestore,
+ ) : OrdersRepository {
     companion object {
         const val TAG = "OrdersRepositoryImpl"
     }
 
     private val reportsOrdersRef = db.collection(ORDERS)
+
 
 
     override fun getCreatedOrders() = callbackFlow {
@@ -82,6 +86,8 @@ class OrdersRepositoryImpl @Inject constructor(
         }
 
     }
+
+
 
 }
 

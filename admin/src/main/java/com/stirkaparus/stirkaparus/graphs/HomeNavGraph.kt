@@ -40,13 +40,10 @@ fun HomeNavGraph(navController: NavHostController, paddingValue: PaddingValues) 
             ReportsScreen(
                 navController = navController,
                 bottomPadding = paddingValue,
-                navigateToOrderDetailsScreen = { orderId ->
-                    navController.navigate("${ReportsScreens.ReportOrderDetails.route}/${orderId}")
+                navigateToUserOrdersScreen = { userId ->
+                    navController.navigate("${ReportsScreens.ReportUserOrdersListScreen.route}/${userId}")
                 },
-                onSearchIconClick = {
-                    navController.navigate(ReportsScreens.ReportSearch.route)
 
-                },
             )
 
         }

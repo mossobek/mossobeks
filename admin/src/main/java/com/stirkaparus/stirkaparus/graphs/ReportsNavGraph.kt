@@ -1,34 +1,43 @@
 package com.stirkaparus.stirkaparus.graphs
 
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
+import androidx.navigation.*
 import androidx.navigation.compose.composable
-import androidx.navigation.navigation
+import com.stirkaparus.stirkaparus.common.Constants
+import com.stirkaparus.stirkaparus.presentation.reports.components.ReportUserOrdersListScreen
 
 
 fun NavGraphBuilder.reportsNavGraph(
     navController: NavHostController
 ) {
     navigation(
-        route = Graph.REPORTS, startDestination = ReportsScreens.ReportSearch.route
+        route = Graph.REPORTS,
+        startDestination = ReportsScreens.ReportUserOrdersListScreen.route + "/{id}"
     ) {
-        composable(route = ReportsScreens.ReportSearch.route) {
-//            ReportsSearchScreen(
-//                navToOrder = { order ->
-//
-//                }, navBack = {
-//
-//                }
-//            )
+        composable(
+            route = ReportsScreens.ReportUserOrdersListScreen.route + "/{id}",
+            arguments = listOf(navArgument("id") {
+                type = NavType.StringType
+            })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id") ?: Constants.NO_VALUE
+            ReportUserOrdersListScreen(
+                id = id,
+                navBack = {
+
+                },
+                navigateToOrderScreen = {
+
+                })
         }
     }
 
 }
 
+
 sealed class ReportsScreens(val route: String) {
 
     object ReportSearch : ReportsScreens(route = "SEARCH")
-    object ReportOrderDetails : ReportsScreens(route = "REPORTS_ORDER_DETAILS")
+    object ReportUserOrdersListScreen : ReportsScreens(route = "REPORTS_USER_ORDER_LIST")
 
 }
 

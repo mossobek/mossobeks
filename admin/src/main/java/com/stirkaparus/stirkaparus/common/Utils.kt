@@ -6,6 +6,7 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import com.google.firebase.Timestamp
+import com.stirkaparus.stirkaparus.common.Constants.TAG
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -33,20 +34,16 @@ fun formatDate(time: Any?): String {
 
         val data: Date = (time as Timestamp).toDate()
 
-        SimpleDateFormat("dd. MM. yy '-' HH:mm:ss").format(data)
+        SimpleDateFormat("dd. MMM ' ' HH:mm").format(data)
     } else "--:--"
 }
 
 fun getAgoTime(ts: Any?): String {
-
     return if (ts != null && ts != "") {
-
         val data = ts as Timestamp
-
-        val time = (data.seconds).minus(ts.seconds)
-
+        Log.e(TAG, "getAgoTime: $data", )
+        val time = (Timestamp.now().seconds).minus(ts.seconds)
         getShortDateAgo(time)
-
     } else "--:--"
 
 }

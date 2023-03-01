@@ -32,6 +32,7 @@ import com.stirkaparus.stirkaparus.presentation.order_details.OrderDetailsViewMo
 import com.stirkaparus.stirkaparus.presentation.order_edit_screen.showToast
 import com.stirkaparus.stirkaparus.presentation.orders_list_screen.components.OrderItem
 import com.stirkaparus.stirkaparus.presentation.orders_list_screen.components.SortSection
+import com.stirkaparus.stirkaparus.presentation.reports.components.ReportUserOrderItemCard
 import com.stirkaparus.stirkaparus.ui.theme.BackgroundColor
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "UnrememberedMutableState")
@@ -45,7 +46,7 @@ fun OrdersScreen(
     val context = LocalContext.current
 
     val filterList: List<String> = listOf("created", "taken")
-     val postsResource by viewModel.fetchPosts().collectAsState(initial = Resource.loading(null))
+    val postsResource by viewModel.fetchPosts().collectAsState(initial = Resource.loading(null))
     val posts = postsResource.data ?: emptyList()
     var filteredPosts by remember { mutableStateOf(posts) }
     val scaffoldState = rememberScaffoldState()
@@ -54,7 +55,7 @@ fun OrdersScreen(
         mutableStateOf("")
     }
     var loading by remember { mutableStateOf(false) }
-    if (loading)  ProgressDialog()
+    if (loading) ProgressDialog()
 
 
     Scaffold(
@@ -158,20 +159,21 @@ fun OrdersScreen(
 
 
 
-             LazyColumn(modifier = Modifier.fillMaxSize()) {
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
 
                 items(filteredPosts) { order ->
                     if (order != null) {
-                        OrderItem(
-                            order = order,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable(onClick = {
-                                    navController.navigate(Graph.ORDER_DETAIL + "/${order.id}")
-                                }),
-                            onDeleteItemMenuClick = {
-
-                                loading = true
+                        ReportUserOrderItemCard(
+                            onClick = {},
+                            order = order
+//                            modifier = Modifier
+//                                .fillMaxWidth()
+//                                .clickable(onClick = {
+//                                    navController.navigate(Graph.ORDER_DETAIL + "/${order.id}")
+//                                }),
+//                            onDeleteItemMenuClick = {
+//
+//                                loading = true
 //                                viewModelEditText.deleteOrder(
 //                                    order.id,
 //                                    success = {
@@ -183,15 +185,15 @@ fun OrdersScreen(
 //                                        loading = false
 //
 //                                    })
-
-
-                            },
-                            onPhoneClick = {
-                                val callPhone = order.phone
-                                val callIntent = Intent(Intent.ACTION_DIAL)
-                                callIntent.data = Uri.parse("tel:$callPhone")
-                                startActivity(context, callIntent, null)
-                            }
+//
+//
+                            //                          },
+//                            onPhoneClick = {
+//                                val callPhone = order.phone
+//                                val callIntent = Intent(Intent.ACTION_DIAL)
+//                                callIntent.data = Uri.parse("tel:$callPhone")
+//                                startActivity(context, callIntent, null)
+//                            }
                         )
                     }
                     Spacer(modifier = Modifier.height(6.dp))

@@ -15,11 +15,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.stirkaparus.model.Order
+import com.stirkaparus.model.User
 
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ReportItemCard(order: Order, onClick: () -> Unit) {
+fun ReportItemCard(user: User, onClick: () -> Unit) {
     Card(
         shape = MaterialTheme.shapes.small,
         modifier = Modifier
@@ -40,13 +41,13 @@ fun ReportItemCard(order: Order, onClick: () -> Unit) {
                     all = 12.dp
                 )
         ) {
-            order.phone?.let { phone ->
-                Text(
-                    text = phone,
-                    color = Color.DarkGray,
-                    fontSize = 25.sp
-                )
-            }
+
+            Text(
+                text = user.name.toString(),
+                color = Color.DarkGray,
+                fontSize = 25.sp
+            )
+
         }
     }
 }

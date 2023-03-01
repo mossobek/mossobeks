@@ -14,11 +14,22 @@ val GreenStatusColor = Color(0xFF497D04)
 val GrayStatusColor = Color(0xFF848080)
 val RedStatusColor = Color(0xFFFB0F0F)
 
+ val LightGray = Color(0xFFBBDEFB)
+val Blue2 = Color(0xFF0F56B3)
+val Blue4 = Color(0xFF8AB9F6)
+val Blue5 = Color(0xFF1F8B24)
+val Blue6 = Color(0xFF8CE590)
+val Blue7 = Color(0xFFC5F2C7)
+val Blue8 = Color(0xFFC5DCFA)
+val Blue9 = Color(0xFF1672EC)
+val Blue10 = Color(0xFF0F56B3)
+val Blue11 = Color(0xFFA90E46)
+val Blue12 = Color(0xFFE1125E)
+val Blue13 = Color(0xFFFCD0CF)
+val Blue3 = Color(0xFFC5DCFA)
+val CardDescColor = Color(0xFFA1A1A1)
 
-
-val LightGray = Color(0xFFBBDEFB)
-val LightBlue = Color(0xFFD7E5FE)
-
+val ButtonBlueColor = Color(0xFF027DFE)
 //
 val BackgroundColor = Color(0xFFF5F5F5)
 

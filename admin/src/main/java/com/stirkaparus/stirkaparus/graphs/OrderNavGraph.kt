@@ -25,7 +25,9 @@ fun NavGraphBuilder.orderNavGraph(
             OrderDetailsScreen(
                 id = id,
                 navController = navController,
-                navBack = {},
+                navBack = {
+                          navController.popBackStack()
+                },
                 navToCarpets = {},
                 editOOrder = {}
             )
