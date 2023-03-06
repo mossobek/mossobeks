@@ -25,8 +25,7 @@ class CarpetsRepositoryImpl(
     private val firebaseFirestore: FirebaseFirestore,
 ) : CarpetsRepository {
 
-    private val carpetsRef = firebaseFirestore.collection(CARPETS)
-    private val ordersRef = firebaseFirestore.collection(ORDERS)
+     private val ordersRef = firebaseFirestore.collection(ORDERS)
 
     override suspend fun addCarpetInFirestore(carpet: Carpet): AddCarpetResponse {
         return try {
@@ -34,9 +33,10 @@ class CarpetsRepositoryImpl(
 
             firebaseFirestore.runTransaction { trans ->
                 val orderRef = ordersRef.document(carpet.orderId.toString())
-                val id = carpetsRef.document().id
+                val id = ordersRef.document(carpet.orderId.toString()).collection(CARPETS).document().id
                 val carpetRef = ordersRef.document(carpet.orderId.toString()).collection(CARPETS)
                     .document(id)
+                carpet.id = id
                 val order = trans.get(orderRef).toObject(Order::class.java)
 
                 Log.e( TAG, "addCarpet: $carpet", )

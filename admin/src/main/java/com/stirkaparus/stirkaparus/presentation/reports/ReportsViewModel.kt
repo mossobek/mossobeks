@@ -4,12 +4,9 @@ import android.content.SharedPreferences
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.stirkaparus.stirkaparus.common.Constants.COMPANY_ID
 import com.stirkaparus.model.Response
-import com.stirkaparus.model.User
 import com.stirkaparus.stirkaparus.domain.repository.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -26,9 +23,11 @@ class ReportsViewModel @Inject constructor(
         const val TAG = "ReportsViewModel"
     }
 
-    var drivers: MutableLiveData<List<User>> = MutableLiveData<List<User>>()
+    var userReportDialog by mutableStateOf(false)
 
     var reportsOrdersResponse by mutableStateOf<ReportsOrdersResponse>(Response.Loading)
+        private set
+    var doReportResponse by mutableStateOf<DoReportResponse>(Response.Loading)
         private set
 
     var reportOrderListResponse by mutableStateOf<ReportOrderListResponse>(Response.Loading)
@@ -47,6 +46,19 @@ class ReportsViewModel @Inject constructor(
         repo.getReportsUserOrdersListFromFirestore(id).collect { response ->
             reportUserOrdersListResponse = response
         }
+    }
+
+    fun openUserReportDialog() {
+        userReportDialog = true
+    }
+
+    fun closeUserReportDialog() {
+        userReportDialog = false
+    }
+
+    fun doReport(id: String)  = viewModelScope.launch{
+        doReportResponse = Response.Loading
+        doReportResponse = repo.doReport(id)
     }
 
 

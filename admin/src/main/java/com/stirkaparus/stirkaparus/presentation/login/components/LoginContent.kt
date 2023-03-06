@@ -1,7 +1,9 @@
 package com.stirkaparus.stirkaparus.presentation.login.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -9,10 +11,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.stirkaparus.stirkaparus.R
 import com.stirkaparus.stirkaparus.common.Constants.FORGOT_PASSWORD
 import com.stirkaparus.stirkaparus.common.Constants.NO_ACCOUNT
 
@@ -46,10 +50,24 @@ fun LoginContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(padding),
-        verticalArrangement = Arrangement.Center,
+            .padding(padding)
+            .padding(top = 80.dp),
+        verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+
+            Image(
+
+                painterResource(R.drawable.logoadmin),
+                contentDescription = "",
+                modifier = Modifier.size(148.dp)
+            )
+
+
+        SmallSpacer(36.dp)
+
+
         EmailField(email = email, onEmailValueChange = { newValue ->
             email = newValue
         })
@@ -87,7 +105,6 @@ fun LoginContent(
 
         }
     }
-
 
 
 }

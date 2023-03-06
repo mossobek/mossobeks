@@ -8,40 +8,46 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.stirkaparus.model.Carpet
 import com.stirkaparus.stirkaparus.presentation.carpets.CarpetsViewModel
 import com.stirkaparus.stirkaparus.presentation.components.SmallSpacer
-import com.stirkaparus.stirkaparus.presentation.order_edit_screen.showToast
+import com.stirkaparus.stirkaparus.ui.theme.ButtonBlueColor
+import com.stirkaparus.stirkaparus.ui.theme.DisableButtonColor
+import com.stirkaparus.stirkaparus.ui.theme.TextLabelColor
 import kotlin.math.roundToInt
 
 @Composable
 fun AddCarpetSheet(
     id: String,
     viewModel: CarpetsViewModel = hiltViewModel(),
-//    onClick: () -> Unit,
     price: Int = 120,
+    onDismiss: () -> Unit,
 
     ) {
-    val context = LocalContext.current
-    var loading by remember { mutableStateOf(false) }
+
+    var buttonEnable by remember { mutableStateOf(false) }
 
     val sideA = remember { mutableStateOf("") }
     val sideB = remember { mutableStateOf("") }
 
-    val square = remember { mutableStateOf("") }
-    val sum = remember { mutableStateOf("") }
+    val square = remember { mutableStateOf("0") }
+    val sum = remember { mutableStateOf("0") }
 
     if (sideB.value != "" && sideA.value != "") {
         val i = ((sideB.value.toDouble()) / 100 * (sideA.value.toDouble()) / 100)
         square.value = ((i * 100).roundToInt() / 100.0).toString()
         sum.value = (((i * price) * 100).roundToInt() / 100).toString()
+        buttonEnable = true
 
+    } else {
+        buttonEnable = false
     }
 
 
@@ -55,7 +61,7 @@ fun AddCarpetSheet(
         modifier = Modifier
             .background(Color.White)
             .fillMaxSize()
-            .padding(start = 16.dp, end = 16.dp),
+            .padding(horizontal = 8.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -66,168 +72,137 @@ fun AddCarpetSheet(
                 .height(3.dp), color = Color.Black
         )
         SmallSpacer()
+        SmallSpacer()
         Text(
             modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center,
+            textAlign = TextAlign.Left,
             text = "Добавление ковра",
-            style = MaterialTheme.typography.subtitle1,
+            fontSize = 24.sp,
         )
-        SmallSpacer()
-        SmallSpacer()
-        SmallSpacer()
-        Divider()
-        SmallSpacer()
-
-        Row(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            TextField(
-                modifier = Modifier
-                    .weight(1f)
-                    .height(50.dp)
-                    .padding(end = 8.dp),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next
-                ),
-                label = { Text(text = "Ширина") },
-                value = sideA.value,
-                singleLine = true,
-                onValueChange = { v ->
-                    sideA.value = v.filter { it.isDigit() }
-                },
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = Color.White
-                ),
-                textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
-            )
-            TextField(
-                modifier = Modifier
-                    .weight(1f)
-                    .height(50.dp)
-                    .padding(end = 8.dp),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next
-                ),
-                label = { Text(text = "Длина") },
-                value = sideB.value,
-                singleLine = true,
-                onValueChange = { v ->
-                    sideB.value = v.filter { it.isDigit() }
-                },
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = Color.White
-                ),
-                textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
-            )
-        }
-
-        SmallSpacer()
-        Divider()
-        SmallSpacer()
-
+        SmallSpacer(12.dp)
         Row(Modifier.fillMaxWidth()) {
-
-
             Row(
-                modifier = Modifier.weight(1f),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
+                Modifier
+                    .weight(1f)
+                    .padding(end = 8.dp)
             ) {
-                Text(
-                    text = "сумма",
-
-                    textAlign = TextAlign.Start
-                )
-                Text(text = ": ")
-                Text(
-                    text = sum.value,
-                    textAlign = TextAlign.Start
-                )
-
-            }
-            Row(
-                modifier = Modifier.weight(1f),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "квадратов",
-                    textAlign = TextAlign.Start
-                )
-                Text(text = ": ")
-
-                Text(
-                    text = square.value,
-                    textAlign = TextAlign.Start
-                )
-
-            }
-
-
-        }
-        Column() {
-            Column(
-                modifier = Modifier
-                    .background(Color.White)
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
-                    .height(40.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Button(
-                    modifier = Modifier
-                        .width(200.dp)
-                        .align(Alignment.CenterHorizontally),
-                    onClick = {
-
-
-                        if (sideB.value != "" && sideB.value != "") {
-                            val a = sideA.value
-                            val b = sideB.value
-
-                            val carpet = Carpet()
-                            carpet.sideA = a.toInt()
-                            carpet.sideB = b.toInt()
-                            carpet.sum = sum.value.toString().toInt()
-                            carpet.orderId = id
-                            carpet.square = square.value.toDouble()
-
-                            loading = true
-
-
-                            viewModel.addCarpet(
-                                carpet
-                            )
-
-                        }
-
-
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Color.LightGray,
-                    )
-                ) {
-
+                Column() {
                     Text(
-                        text = if (!loading) {
-                            "Добавить"
-                        } else {
-                            ""
-                        }
+                        modifier = Modifier.padding(12.dp),
+                        text = "Ширина",
+                        color = TextLabelColor,
                     )
+                    OutlinedTextField(
+                        textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
+                        value = sideA.value,
+                        onValueChange = { v ->
+                            sideA.value = v.filter { it.isDigit() }
 
-                    if (loading) CircularProgressIndicator(
-                        modifier = Modifier.size(30.dp),
-                        color = Color.DarkGray,
-                        strokeWidth = 2.dp
+                        },
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = Color.White
+                        ),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next
+                        ),
+                    )
+                }
+            }
+            Row(
+                Modifier
+                    .weight(1f)
+                    .padding(start = 8.dp)
+            ) {
+                Column() {
+                    Text(
+                        modifier = Modifier.padding(12.dp), text = "Длина", color = TextLabelColor
+                    )
+                    OutlinedTextField(
+
+                        textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
+                        value = sideB.value,
+                        onValueChange = { v ->
+                            sideB.value = v.filter { it.isDigit() }
+
+                        },
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = Color.White
+                        ),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Next
+                        ),
                     )
                 }
             }
         }
-    }
 
+        SmallSpacer(16.dp)
+        Divider()
+        SmallSpacer(19.dp)
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp)
+        ) {
+            CarpetRow(key = "Квадратов", value = square.value)
+            CarpetRow(key = "Стоимость", value = sum.value)
+            CarpetRow(key = "Цена за квадрат", value = price.toString())
+
+        }
+        SmallSpacer(20.dp)
+        Divider()
+        SmallSpacer(20.dp)
+        Button(
+            modifier = Modifier
+                .height(45.dp)
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp),
+            enabled = buttonEnable,
+            onClick = {
+
+                if (sideB.value != "" && sideB.value != "") {
+                    val carpet = Carpet()
+                    carpet.sideA = sideA.value.toInt()
+                    carpet.sideB = sideB.value.toInt()
+                    carpet.square = square.value.toDouble()
+                    carpet.sum = sum.value.toInt()
+                    carpet.orderId = id
+                    viewModel.addCarpet(carpet = carpet).also {
+                        sideA.value = "0"
+                        sideB.value = "0"
+                    }
+
+                    onDismiss()
+                }
+
+
+            },
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = ButtonBlueColor,
+                contentColor = Color.White,
+                disabledBackgroundColor = DisableButtonColor,
+                disabledContentColor = Color.Gray,
+            )
+        ) {
+            Text(text = "Добавить ковер")
+        }
+    }
 }
 
 
+@Composable
+private fun CarpetRow(key: String, value: String) {
+
+
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(bottom = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(text = key, fontSize = 18.sp)
+        Text(text = value, fontWeight = Bold, fontSize = 18.sp)
+    }
+
+}
 

@@ -25,7 +25,6 @@ import com.stirkaparus.stirkaparus.common.Constants.TAKEN_TIME
 import com.stirkaparus.stirkaparus.common.Constants.WASHED
 import com.stirkaparus.stirkaparus.common.Constants.WASHED_TIME
 import com.stirkaparus.stirkaparus.domain.repository.*
-import com.stirkaparus.stirkaparus.presentation.orders_list_screen.Status
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,17 +33,30 @@ import javax.inject.Inject
 class OrderDetailsViewModel @Inject constructor(
     private val repo: OrderDetailsRepository,
 ) : ViewModel() {
+    var deleteOrderDialog by mutableStateOf(false)
     private val db = Firebase.firestore
 
     private val _order = MutableLiveData(Order())
     var order = _order
 
-    var successStatusChangeToTaken by mutableStateOf(false)
-        private set
+    var bottomSheet by mutableStateOf(false)
+    var takeDialog by mutableStateOf(false)
+    var editOrderDialog by mutableStateOf(false)
+
     var deliveredDialog by mutableStateOf(false)
         private set
 
     var orderDeliveredResponse by mutableStateOf<OrderDeliveredResponse>(
+        Response.Success(
+            false
+        )
+    )
+    var deleteOrderResponse by mutableStateOf<DeleteOrderResponse>(
+        Response.Success(
+            false
+        )
+    )
+    var editOrderResponse by mutableStateOf<EditOrderResponse>(
         Response.Success(
             false
         )
@@ -75,7 +87,6 @@ class OrderDetailsViewModel @Inject constructor(
     }
 
 
-
     fun changeStatus(
         id: String, status: String
     ) = viewModelScope.launch {
@@ -99,9 +110,6 @@ class OrderDetailsViewModel @Inject constructor(
 
     }
 
-    fun successStatusChangeToTaken() {
-        successStatusChangeToTaken = true
-    }
 
     fun openDeliveredDialog() {
         deliveredDialog = true
@@ -111,10 +119,60 @@ class OrderDetailsViewModel @Inject constructor(
         deliveredDialog = false
     }
 
+    fun editOrder(
+        id: String,
+        phone: String,
+        address: String,
+        comment: String,
+        count: Int,
+        total: Int
+    ) =
+        viewModelScope.launch {
+            editOrderResponse = Response.Loading
+            editOrderResponse = repo.editOrder(
+                id,
+                phone, address, comment, count, total
+            )
+        }
+
     fun orderDeliveredStatus(id: String) = viewModelScope.launch {
         orderDeliveredResponse = Response.Loading
         orderDeliveredResponse = repo.orderDelivered(id)
     }
+    fun deleteOrder(id: String) = viewModelScope.launch {
+        deleteOrderResponse = Response.Loading
+        deleteOrderResponse = repo.deleteOrder(id)
+    }
+    fun openTakeDialog() {
+        takeDialog = true
+    }
+
+    fun closeBottomSheet() {
+        bottomSheet = false
+    }
+
+    fun openDeleteOrderDialog() {
+        deleteOrderDialog = true
+    }
+
+    fun openEditOrderDialog() {
+        editOrderDialog = true
+    }
+
+    fun closeEditOrderDialog() {
+        editOrderDialog = false
+    }
+
+    fun closeTakeDialog() {
+        takeDialog = false
+    }
+
+    fun closeDeleteOrderDialog() {
+        deleteOrderDialog = false
+    }
+
+
+
 
 }
 

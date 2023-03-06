@@ -27,11 +27,7 @@ fun EmailField(
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Email
         ),
-        //modifier = Modifier.focusRequester(focusRequester)
-    )
-//    LaunchedEffect(Unit){
-//        coroutineContext.job.invokeOnCompletion {
-//            focusRequester.requestFocus()
-//        }
-//    }
+     )
+
+
 }

@@ -1,4 +1,4 @@
-package com.stirkaparus.stirkaparus.presentation.add_screen
+package com.stirkaparus.stirkaparus.presentation.add_order_screen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
@@ -6,9 +6,9 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.stirkaparus.stirkaparus.presentation.add_screen.components.AddOrderContent
-import com.stirkaparus.stirkaparus.presentation.add_screen.components.AddOrderToDB
-import com.stirkaparus.stirkaparus.presentation.add_screen.components.AddOrderTopBar
+import com.stirkaparus.stirkaparus.presentation.add_order_screen.components.AddOrderContent
+import com.stirkaparus.stirkaparus.presentation.add_order_screen.components.AddOrderToDB
+import com.stirkaparus.stirkaparus.presentation.add_order_screen.components.AddOrderTopBar
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable

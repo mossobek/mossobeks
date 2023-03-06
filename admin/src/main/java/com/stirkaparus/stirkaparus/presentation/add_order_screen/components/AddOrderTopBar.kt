@@ -1,4 +1,4 @@
-package com.stirkaparus.stirkaparus.presentation.add_screen.components
+package com.stirkaparus.stirkaparus.presentation.add_order_screen.components
 
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar

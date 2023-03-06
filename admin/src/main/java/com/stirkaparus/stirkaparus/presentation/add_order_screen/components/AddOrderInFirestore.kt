@@ -1,10 +1,10 @@
-package com.stirkaparus.stirkaparus.presentation.add_screen.components
+package com.stirkaparus.stirkaparus.presentation.add_order_screen.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.stirkaparus.model.Response
-import com.stirkaparus.stirkaparus.presentation.add_screen.AddOrderViewModel
+import com.stirkaparus.stirkaparus.presentation.add_order_screen.AddOrderViewModel
 import com.stirkaparus.stirkaparus.presentation.components.ProgressDialog
 
 @Composable

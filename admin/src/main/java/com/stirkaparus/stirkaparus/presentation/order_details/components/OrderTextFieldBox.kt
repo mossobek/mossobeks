@@ -11,15 +11,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.stirkaparus.model.Order
 import com.stirkaparus.stirkaparus.common.Constants
 import com.stirkaparus.stirkaparus.common.formatDate
-import com.stirkaparus.stirkaparus.presentation.orders_list_screen.components.setStatus
+import com.stirkaparus.stirkaparus.presentation.order_details.OrderDetailsViewModel
 
 
 @Composable
 fun OrderTextFieldBox(
-    order: Order, onStatusClick: () -> Unit,
+    order: Order,
+    onStatusClick: () -> Unit,
     navToCarpets: () -> Unit,
     onAddCarpetClick: () -> Unit,
 ) {
@@ -31,6 +33,7 @@ fun OrderTextFieldBox(
 
         Spacer(modifier = Modifier.height(16.dp))
         CustomTextFieldRow(
+
             description = Constants.PHONE_RU,
             text = order.phone.toString(),
             icon = Icons.Default.Phone
@@ -48,7 +51,7 @@ fun OrderTextFieldBox(
             icon = Icons.Default.Comment
         )
         Spacer(modifier = Modifier.height(2.dp))
-        OrderDetailsStatusComponent(status = setStatus(order.status.toString(), order),
+        OrderDetailsStatusComponent(order = order,
             description = Constants.STATUS_RU,
             text = order.status.toString(),
             icon = Icons.Default.CheckCircle,
@@ -56,7 +59,8 @@ fun OrderTextFieldBox(
                 onStatusClick()
             })
         Spacer(modifier = Modifier.height(2.dp))
-        CustomTextFieldRow(visibleAddButton = order.status == Constants.TAKEN,
+        CustomTextFieldRow(
+            visibleAddButton = order.status == Constants.TAKEN,
             description = Constants.COUNT_RU,
             text = order.count.toString(),
             icon = Icons.Default.AutoAwesomeMotion,

@@ -5,5 +5,5 @@ package com.stirkaparus.stirkaparus.useCases
 class GetCreatedOrders(
     private val repo: OrdersRepository
 ) {
-    operator fun invoke() = repo.getCreatedOrders()
+ //   operator fun invoke() = repo.getCreatedOrders()
 }

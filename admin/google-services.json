@@ -123,6 +123,35 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:643196191350:android:d582d0634590512d9f9557",
+        "android_client_info": {
+          "package_name": "com.stirkaparus.dstirkaparus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "643196191350-8t629a18v19blinh9rrfc1mrpcos34rg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyqX4l8QBTJKXAqw3hiA5AnYIdVwiPx80"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "643196191350-8t629a18v19blinh9rrfc1mrpcos34rg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:643196191350:android:6e7ba5bef1c425ac9f9557",
         "android_client_info": {
           "package_name": "com.stirkaparus.pa"

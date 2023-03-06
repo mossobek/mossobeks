@@ -13,12 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.stirkaparus.stirkaparus.common.Constants.DRIVER
 import com.stirkaparus.stirkaparus.common.Constants.TAG
 import com.stirkaparus.stirkaparus.common.Constants.WASHER
-import com.stirkaparus.stirkaparus.presentation.add_new_user.AddNewUsrViewModel
-import com.stirkaparus.stirkaparus.presentation.add_screen.components.AddOrderTextField
+import com.stirkaparus.stirkaparus.presentation.add_order_screen.components.AddOrderTextField
 import com.stirkaparus.stirkaparus.presentation.components.SmallSpacer
 import es.dmoral.toasty.Toasty
 

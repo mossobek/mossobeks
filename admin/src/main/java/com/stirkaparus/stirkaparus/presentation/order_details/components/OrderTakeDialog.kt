@@ -32,10 +32,9 @@ import es.dmoral.toasty.Toasty
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun OrderTakeDialog(
+    openDialog: Boolean,
     id: String,
     viewModel: OrderDetailsViewModel = hiltViewModel(),
-    onDismiss: () -> Unit,
-    onConfirm: (count:String) -> Unit,
 ) {
 
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -43,43 +42,80 @@ fun OrderTakeDialog(
     var count by remember {
         mutableStateOf("")
     }
-
-    Dialog(
-        onDismissRequest = {
-            onDismiss()
-        },
-        properties = DialogProperties(
-            dismissOnBackPress = true,
-            dismissOnClickOutside = true,
-            usePlatformDefaultWidth = false
-        )
-    ) {
-        Card(
-            elevation = 5.dp,
-            shape = RoundedCornerShape(5.dp),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .border(2.dp, color = Blue, shape = RoundedCornerShape(2.dp))
+    if (openDialog) {
+        Dialog(
+            onDismissRequest = {
+                viewModel.closeTakeDialog()
+            },
+            properties = DialogProperties(
+                dismissOnBackPress = true,
+                dismissOnClickOutside = true,
+                usePlatformDefaultWidth = false
+            )
         ) {
-            Column(
+            Card(
+                elevation = 5.dp,
+                shape = RoundedCornerShape(5.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(15.dp),
-                verticalArrangement = Arrangement.spacedBy(25.dp)
+                    .padding(16.dp)
+                    .border(2.dp, color = Blue, shape = RoundedCornerShape(2.dp))
             ) {
-
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-
-                    text = "Забрали заказ у клиента?",
-                    style = MaterialTheme.typography.h6,
-                    textAlign = TextAlign.Center
-                )
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(15.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(15.dp),
+                    verticalArrangement = Arrangement.spacedBy(25.dp)
                 ) {
+
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+
+                        text = "Забрали заказ у клиента?",
+                        style = MaterialTheme.typography.h6,
+                        textAlign = TextAlign.Center
+                    )
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(15.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(fontSize = 22.sp, text = "количество: ")
+
+                            TextField(
+                                textStyle = TextStyle.Default.copy(fontSize = 18.sp),
+                                //label = { Text(text = "Кол") },
+                                modifier = Modifier
+                                    .scale(scaleY = 0.9F, scaleX = 1F)
+                                    .width(65.dp),
+                                value = count,
+                                onValueChange = { it ->
+                                    count = it.filter { it.isDigit() }
+                                },
+                                keyboardOptions = KeyboardOptions(
+                                    keyboardType = KeyboardType.Decimal
+                                ),
+                                colors = TextFieldDefaults.textFieldColors(
+                                    cursorColor = Color.DarkGray,
+                                    disabledLabelColor = Color.DarkGray,
+                                    focusedLabelColor = Color.DarkGray,
+                                    placeholderColor = Color.DarkGray,
+                                    focusedIndicatorColor = Color.DarkGray
+
+                                )
+                            )
+                        }
+
+
+                    }
+
+                    Divider()
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -87,81 +123,46 @@ fun OrderTakeDialog(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(fontSize = 22.sp, text = "количество: ")
-
-                        TextField(
-                            textStyle = TextStyle.Default.copy(fontSize = 18.sp),
-                            //label = { Text(text = "Кол") },
-                            modifier = Modifier
-                                .scale(scaleY = 0.9F, scaleX = 1F)
-                                .width(65.dp),
-                            value = count,
-                            onValueChange = { it ->
-                                count = it.filter { it.isDigit() }
+                        DialogOrderCustomButton(
+                            onClick = {
+                                viewModel.closeTakeDialog()
                             },
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Decimal
-                            ),
-                            colors = TextFieldDefaults.textFieldColors(
-                                cursorColor = Color.DarkGray,
-                                disabledLabelColor = Color.DarkGray,
-                                focusedLabelColor = Color.DarkGray,
-                                placeholderColor = Color.DarkGray,
-                                focusedIndicatorColor = Color.DarkGray
+                            label = "Нет"
+                        )
+                        DialogOrderCustomButton(
+                            enable = count.isNotEmpty(),
+                            onClick = {
+                                keyboardController?.hide()
+                                if (count.isNotEmpty()) {
+                                    if (count.toInt() > 0) {
+                                        viewModel.orderTaken(count.toInt(), id)
+                                        viewModel.closeTakeDialog()
 
-                            )
+
+                                        Log.e(TAG, "OrderTakeDialog: >0")
+                                    } else {
+                                        Toasty.error(
+                                            context,
+                                            "Введите количество ковров",
+                                            Toast.LENGTH_SHORT,
+                                            true
+                                        ).show()
+                                    }
+                                }
+                            },
+                            label = "Заказ получен"
                         )
                     }
 
-
-                }
-
-                Divider()
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    DialogOrderCustomButton(
-                        onClick = {
-                            onDismiss()
-                        },
-                        label = "Нет"
-                    )
-                    DialogOrderCustomButton(
-                        enable = count.isNotEmpty(),
-                        onClick = {
-                            keyboardController?.hide()
-                            if (count.isNotEmpty()) {
-                                if (count.toInt() > 0) {
-                                    onConfirm(count)
-
-
-                                    Log.e(TAG, "OrderTakeDialog: >0")
-                                } else {
-                                    Toasty.error(
-                                        context,
-                                        "Введите количество ковров",
-                                        Toast.LENGTH_SHORT,
-                                        true
-                                    ).show()
-                                }
-                            }
-                        },
-                        label = "Заказ получен"
-                    )
                 }
 
             }
-
         }
+
+
     }
 
-
 }
-
 
 @Composable
 fun DialogOrderCustomButton(

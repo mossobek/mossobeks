@@ -1,4 +1,4 @@
-package com.stirkaparus.stirkaparus.presentation.add_screen.components
+package com.stirkaparus.stirkaparus.presentation.add_order_screen.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding

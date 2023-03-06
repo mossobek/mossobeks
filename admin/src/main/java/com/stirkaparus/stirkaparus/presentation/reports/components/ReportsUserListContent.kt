@@ -19,7 +19,7 @@ const val TAG = "ReportsOrderListContent"
 fun ReportsUserListContent(
     padding: PaddingValues,
     userList: List<User>,
-    navigateToUserOrdersScreen: (user: String) -> Unit,
+    navigateToUserOrdersScreen: (userId: String,username:String) -> Unit,
 ) {
 
     Column(Modifier.fillMaxSize()) {
@@ -30,7 +30,7 @@ fun ReportsUserListContent(
             horizontalArrangement = Arrangement.Center
         ) {
 
-            Text(textAlign = TextAlign.Center, fontSize = 20.sp, text = "Выберите отчет:")
+            Text(textAlign = TextAlign.Center, fontSize = 20.sp, text = "Выберите отчеты:")
         }
         LazyColumn(
             modifier = Modifier
@@ -43,7 +43,7 @@ fun ReportsUserListContent(
                 ReportItemCard(
                     user = user,
                     onClick = {
-                        navigateToUserOrdersScreen(user.id.toString())
+                        navigateToUserOrdersScreen(user.id.toString(),user.name.toString())
                     }
                 )
             }

@@ -11,16 +11,18 @@ fun NavGraphBuilder.reportsNavGraph(
 ) {
     navigation(
         route = Graph.REPORTS,
-        startDestination = ReportsScreens.ReportUserOrdersListScreen.route + "/{id}"
+        startDestination = ReportsScreens.ReportUserOrdersListScreen.route + "/{id}/{username}"
     ) {
         composable(
-            route = ReportsScreens.ReportUserOrdersListScreen.route + "/{id}",
-            arguments = listOf(navArgument("id") {
-                type = NavType.StringType
-            })
+            route = ReportsScreens.ReportUserOrdersListScreen.route + "/{id}/{username}",
+            arguments = listOf(
+                navArgument("id") { type = NavType.StringType },
+                navArgument("username") { type = NavType.StringType })
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id") ?: Constants.NO_VALUE
+            val username = backStackEntry.arguments?.getString("username") ?: Constants.NO_VALUE
             ReportUserOrdersListScreen(
+                username = username,
                 id = id,
                 navBack = {
 

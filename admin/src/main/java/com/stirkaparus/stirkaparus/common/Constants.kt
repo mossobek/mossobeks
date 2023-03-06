@@ -22,6 +22,7 @@ object Constants {
     const val FINISHED_TIME: String = "finished_time"
     const val FINISHED_RU: String = "Готов"
     const val DELETED: String = "deleted"
+    const val DELETED_TIME: String = "deleted_time"
     const val DELETED_RU: String = "Удален"
     const val CANCELED = "canceled"
     const val CANCELED_RU = "Отменен"

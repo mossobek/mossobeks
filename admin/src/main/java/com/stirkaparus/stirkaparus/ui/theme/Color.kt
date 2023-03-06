@@ -10,8 +10,8 @@ val Purple700 = Color(0xFF3700B3)
 val BlueStatusColor = Color(0xFF64B5F6)
 val PurpleStatusColor = Color(0xFF9575CD)
 val OrangeStatusColor = Color(0xFFC88109)
-val GreenStatusColor = Color(0xFF497D04)
 val GrayStatusColor = Color(0xFF848080)
+val GreenStatusColor = Color(0xFF497D04)
 val RedStatusColor = Color(0xFFFB0F0F)
 
  val LightGray = Color(0xFFBBDEFB)
@@ -26,10 +26,12 @@ val Blue10 = Color(0xFF0F56B3)
 val Blue11 = Color(0xFFA90E46)
 val Blue12 = Color(0xFFE1125E)
 val Blue13 = Color(0xFFFCD0CF)
+val Blue14 = Color(0xFF223189)
+val Blue15 = Color(0xFF8E9AE3)
+val Blue16 = Color(0xFFC7CDF1)
+val Blue17 = Color(0xFFE0E0E0)
 val Blue3 = Color(0xFFC5DCFA)
 val CardDescColor = Color(0xFFA1A1A1)
-
-val ButtonBlueColor = Color(0xFF027DFE)
 //
 val BackgroundColor = Color(0xFFF5F5F5)
 
@@ -37,5 +39,13 @@ val PhoneColor = Color(0xFF53AA54)
 val PhoneNumberBoxBackground = Color(0xFFF4F4F4)
 
 val OrderDetailsDescriptionColor = Color(0xFF919095)
+//Buttons
+
+val ButtonBlueColor = Color(0xFF027DFE)
+val DisableButtonColor = Color(0xFFE5E5E5)
+
+
+//Text
+val TextLabelColor = Color(0xFF00776A)
 
 

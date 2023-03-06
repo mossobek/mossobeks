@@ -1,90 +1,51 @@
 package com.stirkaparus.stirkaparus.presentation.orders_list_screen
 
 import android.content.SharedPreferences
+import android.util.Log
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
-import com.stirkaparus.stirkaparus.common.Constants
-import com.stirkaparus.stirkaparus.common.Constants.COMPANY_ID
-import com.stirkaparus.model.Order
+import com.stirkaparus.model.Response
+import com.stirkaparus.stirkaparus.domain.repository.OrdersRepository
+import com.stirkaparus.stirkaparus.domain.repository.OrdersResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class OrdersViewModel @Inject constructor(
+    private val repo: OrdersRepository,
     private val prefs: SharedPreferences
 ) : ViewModel() {
 
 
-    private val _state = mutableStateOf(Boolean)
-    val state = _state
+    companion object {
+        const val TAG = "OrdersViewModel"
+    }
+
+    var orderListResponse by mutableStateOf<OrdersResponse>(Response.Loading)
+        private set
+    var sortSectionOpen by mutableStateOf(false)
+
 
     private val db = Firebase.firestore
 
-    fun fetchPosts() = callbackFlow {
-        val companyId = prefs.getString(COMPANY_ID,null)
-
-        val collection = db.collection(Constants.ORDERS)
-            .whereEqualTo(Constants.COMPANY_ID, companyId)
-
-        val snapshotListener = collection
-            //.orderBy("phone", Query.Direction.DESCENDING)
-            .addSnapshotListener { value, error ->
-                val response = if (error == null && value != null) {
-                    val data = value.documents.map { doc ->
-
-                            doc.toObject<Order>().also {
-                                if (it != null) {
-                                    it.id = doc.id
-                                }
-                            }
-
-                    }
-                    Resource.success(data)
-
-                } else {
-                    Resource.error(error.toString(), null)
-                }
-                this.trySend(response).isSuccess
-            }
-        awaitClose {
-            snapshotListener.remove()
+    fun getOrders() = viewModelScope.launch {
+        repo.getOrdersFromFireStore().collect { response ->
+            orderListResponse = response
+            Log.e(TAG, "getOrders:$response ")
         }
     }
 
-
-
-
-
-}
-
-
-enum class Status {
-    SUCCESS,
-    ERROR,
-    LOADING
-}
-
-
-data class Resource<out T>(val status: Status, val data: T?, val message: String?) {
-    companion object {
-        fun <T> success(data: T?): Resource<T> {
-            return Resource(Status.SUCCESS, data, null)
-        }
-
-        fun <T> error(msg: String, data: T?): Resource<T> {
-            return Resource(Status.ERROR, data, msg)
-        }
-
-        fun <T> loading(data: T?): Resource<T> {
-            return Resource(Status.LOADING, data, null)
-        }
+    fun sortSectionOpen() {
+        sortSectionOpen = true
     }
 }
+
 
 
 

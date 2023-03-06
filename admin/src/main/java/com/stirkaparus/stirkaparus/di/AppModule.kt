@@ -39,8 +39,12 @@ object AppModule {
     fun provideOrdersRepository(
         ordersRef: CollectionReference,
         db: FirebaseFirestore,
+        prefs: SharedPreferences
 
-    ): OrdersRepository = OrdersRepositoryImpl(ordersRef, db)
+    ): OrdersRepository = OrdersRepositoryImpl(
+        ordersRef,
+        db,
+        prefs)
 
     @Provides
     fun provideUseCases(

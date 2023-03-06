@@ -13,7 +13,7 @@ typealias ReportsOrdersResponse = Response<Orders>
 
 interface OrdersRepository {
 
-    fun getCreatedOrders(): Flow<OrdersResponse>
+    fun getOrdersFromFireStore(): Flow<OrdersResponse>
 
     suspend fun addOrderInFirestore(
         order: Order

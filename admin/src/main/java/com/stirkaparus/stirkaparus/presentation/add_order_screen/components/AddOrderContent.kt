@@ -1,4 +1,4 @@
-package com.stirkaparus.stirkaparus.presentation.add_screen.components
+package com.stirkaparus.stirkaparus.presentation.add_order_screen.components
 
 import android.util.Log
 import android.widget.Toast
@@ -18,12 +18,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.stirkaparus.model.Order
 import com.stirkaparus.model.Response
-import com.stirkaparus.stirkaparus.presentation.add_screen.AddOrderViewModel
+import com.stirkaparus.stirkaparus.presentation.add_order_screen.AddOrderViewModel
 import com.stirkaparus.stirkaparus.presentation.components.SmallSpacer
 import com.stirkaparus.stirkaparus.presentation.order_edit_screen.showToast
 import es.dmoral.toasty.Toasty
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 const val TAG = "AddOrderContent"
 

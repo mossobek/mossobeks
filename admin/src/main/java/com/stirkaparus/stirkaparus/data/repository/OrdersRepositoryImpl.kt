@@ -11,14 +11,13 @@ import com.stirkaparus.stirkaparus.common.Constants.FINISHED
 import com.stirkaparus.stirkaparus.common.Constants.ORDERS
 import com.stirkaparus.stirkaparus.common.Constants.REPORTED
 import com.stirkaparus.stirkaparus.common.Constants.STATUS
-import com.stirkaparus.stirkaparus.domain.repository.AddOrderInFirestoreResponse
-import com.stirkaparus.stirkaparus.domain.repository.OrdersRepository
-import com.stirkaparus.stirkaparus.domain.repository.ReportsOrdersResponse
 import com.stirkaparus.model.Order
 import com.stirkaparus.model.Response
 import com.stirkaparus.stirkaparus.common.Constants.COMPANIES
-import com.stirkaparus.stirkaparus.domain.repository.ReportUserOrderListResponse
+import com.stirkaparus.stirkaparus.common.Constants.DELETED
+import com.stirkaparus.stirkaparus.domain.repository.*
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -29,18 +28,22 @@ import javax.inject.Singleton
 class OrdersRepositoryImpl @Inject constructor(
     private val ordersRef: CollectionReference,
     private val db: FirebaseFirestore,
- ) : OrdersRepository {
+    private val prefs: SharedPreferences
+) : OrdersRepository {
     companion object {
         const val TAG = "OrdersRepositoryImpl"
     }
 
-    private val reportsOrdersRef = db.collection(ORDERS)
+    private val companyId = prefs.getString(COMPANY_ID, "")
+
+    private
+    val reportsOrdersRef = db.collection(ORDERS)
 
 
-
-    override fun getCreatedOrders() = callbackFlow {
+    override fun getOrdersFromFireStore() = callbackFlow {
         val snapshotListener = ordersRef
-            .whereIn(STATUS, listOf(FINISHED, CREATED))
+            .whereEqualTo(COMPANY_ID, companyId)
+            .whereNotEqualTo(STATUS, DELETED)
             .addSnapshotListener { snapshot, e ->
                 val orderResponse = if (snapshot != null) {
                     val orders = snapshot.toObjects(Order::class.java)
@@ -56,6 +59,7 @@ class OrdersRepositoryImpl @Inject constructor(
         }
 
     }
+
 
     override suspend fun addOrderInFirestore(
         order: Order
@@ -86,7 +90,6 @@ class OrdersRepositoryImpl @Inject constructor(
         }
 
     }
-
 
 
 }

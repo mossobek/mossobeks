@@ -15,14 +15,15 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.stirkaparus.stirkaparus.presentation.orders_list_screen.components.StatusData
+import com.stirkaparus.model.Order
+import com.stirkaparus.stirkaparus.common.StatusImp
 import com.stirkaparus.stirkaparus.ui.theme.OrderDetailsDescriptionColor
 import com.stirkaparus.stirkaparus.ui.theme.PhoneNumberBoxBackground
 import com.stirkaparus.stirkaparus.ui.theme.Teal200
 
 @Composable
 fun OrderDetailsStatusComponent(
-    status: StatusData,
+    order: Order,
     text: String = "Text",
     description: String = "description",
     textColor: Color = Color.Black,
@@ -95,13 +96,13 @@ fun OrderDetailsStatusComponent(
                             .size(15.dp),
                         imageVector = Icons.Default.Circle,
                         contentDescription = "status circle",
-                        tint = status.color!!
+                        tint = StatusImp().colorStatus(order)
 
                     )
 
                     Text(
                         modifier = Modifier.padding(end = 10.dp),
-                        text = status.text.toString()
+                        text = StatusImp().textStatus(order)
                     )
                 }
             }

@@ -5,18 +5,17 @@ import androidx.navigation.compose.composable
 import com.stirkaparus.stirkaparus.common.Constants.NO_VALUE
 import com.stirkaparus.stirkaparus.presentation.carpets.CarpetsScreen
 import com.stirkaparus.stirkaparus.presentation.order_details.OrderDetailsScreen
-import com.stirkaparus.stirkaparus.presentation.order_edit_screen.OrderEditScreen
-import com.stirkaparus.stirkaparus.presentation.orders_list_screen.OrderDetailsScreen1
+import com.stirkaparus.stirkaparus.presentation.orders_list_screen.OrderDetailsScreen
 
 fun NavGraphBuilder.orderNavGraph(
     navController: NavHostController
 ) {
     navigation(
         route = Graph.ORDER_DETAIL + "/{id}",
-        startDestination = OrderDetailsScreen1.OrderDetails.route + "/{id}"
+        startDestination = OrderDetailsScreen.OrderDetails.route + "/{id}"
     ) {
         composable(
-            route = OrderDetailsScreen1.OrderDetails.route + "/{id}",
+            route = OrderDetailsScreen.OrderDetails.route + "/{id}",
             arguments = listOf(navArgument("id") {
                 type = NavType.StringType
             })
@@ -24,18 +23,16 @@ fun NavGraphBuilder.orderNavGraph(
             val id = backStackEntry.arguments?.getString("id") ?: NO_VALUE
             OrderDetailsScreen(
                 id = id,
-                navController = navController,
                 navBack = {
-                          navController.popBackStack()
+                    navController.popBackStack()
                 },
-                navToCarpets = {},
-                editOOrder = {}
+                navToCarpets = {
+                    navController.navigate(OrderDetailsScreen.Carpets.route + "/$id")
+                },
             )
         }
-        composable(route = OrderDetailsScreen1.Edit1.route + "/{id}") {
-            OrderEditScreen(navController = navController)
-        }
-        composable(route = OrderDetailsScreen1.Carpets.route + "/{id}") {
+
+        composable(route = OrderDetailsScreen.Carpets.route + "/{id}") {
             CarpetsScreen(navController = navController)
         }
     }

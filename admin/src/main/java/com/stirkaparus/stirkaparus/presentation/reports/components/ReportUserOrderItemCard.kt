@@ -1,5 +1,4 @@
-package com.stirkaparus.stirkaparus.presentation.orders_list_screen.components
-
+package com.stirkaparus.stirkaparus.presentation.reports.components
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
@@ -8,7 +7,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Circle
+import androidx.compose.material.icons.filled.Discount
+import androidx.compose.material.icons.filled.MonetizationOn
+import androidx.compose.material.icons.filled.Timer
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,28 +25,40 @@ import com.stirkaparus.model.Order
 import com.stirkaparus.stirkaparus.common.Constants
 import com.stirkaparus.stirkaparus.common.StatusImp
 import com.stirkaparus.stirkaparus.common.getAgoTime
-import com.stirkaparus.stirkaparus.presentation.reports.components.CardRowOrder
 import com.stirkaparus.stirkaparus.ui.theme.*
 
+
+@Preview(
+    showBackground = true
+)
+
+@Composable
+fun ReportUserOrderItemCardPrev() {
+
+    ReportUserOrderItemCard(
+        Order(
+        phone = "89285222253",
+        address = "Хасавюрт Хизроева 58. Вторые ворота",
+        comment = "Надо срочно постирать"
+    ), onClick = {})
+}
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun OrderItem(
-    order: Order,
-    onClick: (orderId: String) -> Unit
+fun ReportUserOrderItemCard(
+    order: Order, onClick: () -> Unit
 ) {
 
     Card(
-        shape = RoundedCornerShape(6.dp),
-        modifier = Modifier
+        shape = RoundedCornerShape(6.dp), modifier = Modifier
             .fillMaxWidth()
             .padding(
                 bottom = 4.dp
             )
             .border(
                 width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(size = 6.dp)
-            ), elevation = 3.dp, onClick = { onClick(order.id.toString()) }
+            ), elevation = 3.dp, onClick = onClick
     ) {
         Box(
             modifier = Modifier

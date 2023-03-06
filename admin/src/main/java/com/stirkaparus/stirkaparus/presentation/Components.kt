@@ -31,7 +31,7 @@ fun ProgressDialog() {
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
-                .border(1.dp, Color.Black, shape = RoundedCornerShape(8.dp))
+                .border(1.dp, Color.White, shape = RoundedCornerShape(8.dp))
                 .size(100.dp)
                 .background(Color.White, shape = RoundedCornerShape(8.dp))
         ) {

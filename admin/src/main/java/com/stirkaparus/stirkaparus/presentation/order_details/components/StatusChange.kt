@@ -16,19 +16,28 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.stirkaparus.model.Order
 import com.stirkaparus.stirkaparus.common.Constants.CREATED
+import com.stirkaparus.stirkaparus.common.Constants.CREATED_RU
+import com.stirkaparus.stirkaparus.common.Constants.DELIVERED
+import com.stirkaparus.stirkaparus.common.Constants.DELIVERED_RU
+import com.stirkaparus.stirkaparus.common.Constants.FINISHED
+import com.stirkaparus.stirkaparus.common.Constants.FINISHED_RU
+import com.stirkaparus.stirkaparus.common.Constants.TAKEN
+import com.stirkaparus.stirkaparus.common.Constants.TAKEN_RU
 import com.stirkaparus.stirkaparus.common.Constants.WASHED
+import com.stirkaparus.stirkaparus.common.Constants.WASHED_RU
+import com.stirkaparus.stirkaparus.common.StatusImp
 import com.stirkaparus.stirkaparus.presentation.components.SmallSpacer
 import com.stirkaparus.stirkaparus.presentation.order_details.OrderDetailsViewModel
-import com.stirkaparus.stirkaparus.presentation.orders_list_screen.components.Status
+import com.stirkaparus.stirkaparus.ui.theme.*
 
 const val TAG = "StatusChange"
 
 @Composable
 fun StatusChange(
     viewModel: OrderDetailsViewModel = hiltViewModel(),
-    id: String,
-    onOrderTakeClicked: () -> Unit
+    id: String
 ) {
 
     Column(
@@ -50,22 +59,26 @@ fun StatusChange(
             SmallSpacer()
             Divider()
             TextCustomStatus(
-                status = Status.Created,
+                statusColor = BlueStatusColor,
+                statusText = CREATED_RU,
                 onClick = {
                     viewModel.changeStatus(id = id, status = CREATED)
                 })
             SmallSpacer()
             Divider()
             TextCustomStatus(
-                status = Status.Taken,
+                statusColor = PurpleStatusColor,
+                statusText = TAKEN_RU,
                 onClick = {
-                    onOrderTakeClicked()
+                    viewModel.closeBottomSheet()
+                    viewModel.openTakeDialog()
                 })
             SmallSpacer()
             Divider()
 
             TextCustomStatus(
-                status = Status.Washed,
+                statusColor = OrangeStatusColor,
+                statusText = WASHED_RU,
 
                 onClick = {
                     viewModel.changeStatus(id = id, status = WASHED)
@@ -73,15 +86,17 @@ fun StatusChange(
             SmallSpacer()
             Divider()
             TextCustomStatus(
-                status = Status.Delivered,
+                statusColor = GrayStatusColor,
 
+                statusText = DELIVERED_RU,
                 onClick = {
                     viewModel.openDeliveredDialog()
                 })
             SmallSpacer()
             Divider()
             TextCustomStatus(
-                status = Status.Finished,
+                statusColor = GreenStatusColor,
+                statusText = FINISHED_RU,
                 //  currentSt,
                 onClick = {
                     //onClick(Status.Finished)
@@ -93,40 +108,3 @@ fun StatusChange(
 }
 
 
-@Composable
-fun TextCustomStatus(
-    status: Status,
-    //currentStatus: MutableState<String>,
-    onClick: () -> Unit
-) {
-
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .clickable { onClick() }
-        .height(35.dp)
-        .background(Color.White),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween) {
-        Row(
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                modifier = Modifier.size(26.dp),
-                imageVector = Icons.Default.Lens,
-                tint = status.color!!,
-                contentDescription = status.trans
-            )
-            Text(
-                modifier = Modifier
-                    .padding(start = 16.dp)
-                    .padding(end = 16.dp),
-                text = status.trans,
-                color = Color.Black,
-                fontSize = 18.sp
-            )
-        }
-
-
-    }
-}

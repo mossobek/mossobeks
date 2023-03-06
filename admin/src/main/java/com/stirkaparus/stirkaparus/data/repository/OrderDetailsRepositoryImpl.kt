@@ -8,23 +8,28 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.stirkaparus.model.Order
 import com.stirkaparus.model.Response
+import com.stirkaparus.stirkaparus.common.Constants.ADDRESS
+import com.stirkaparus.stirkaparus.common.Constants.COMMENT
 import com.stirkaparus.stirkaparus.common.Constants.COMPANIES
 import com.stirkaparus.stirkaparus.common.Constants.COMPANY_ID
 import com.stirkaparus.stirkaparus.common.Constants.COUNT
+import com.stirkaparus.stirkaparus.common.Constants.DELETED
+import com.stirkaparus.stirkaparus.common.Constants.DELETED_TIME
 import com.stirkaparus.stirkaparus.common.Constants.DELIVERED
 import com.stirkaparus.stirkaparus.common.Constants.DELIVERED_TIME
+import com.stirkaparus.stirkaparus.common.Constants.ID
 import com.stirkaparus.stirkaparus.common.Constants.ORDERS
+import com.stirkaparus.stirkaparus.common.Constants.PHONE
 import com.stirkaparus.stirkaparus.common.Constants.STATUS
 import com.stirkaparus.stirkaparus.common.Constants.TAKEN
 import com.stirkaparus.stirkaparus.common.Constants.TAKEN_TIME
+import com.stirkaparus.stirkaparus.common.Constants.TOTAL
 import com.stirkaparus.stirkaparus.common.Constants.USERS
-import com.stirkaparus.stirkaparus.domain.repository.ChangeStatusResponse
-import com.stirkaparus.stirkaparus.domain.repository.OrderDeliveredResponse
-import com.stirkaparus.stirkaparus.domain.repository.OrderDetailsRepository
-import com.stirkaparus.stirkaparus.domain.repository.OrderTakenResponse
+import com.stirkaparus.stirkaparus.domain.repository.*
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
+
 
 class OrderDetailsRepositoryImpl(
     private val firebaseFirestore: FirebaseFirestore,
@@ -123,6 +128,46 @@ class OrderDetailsRepositoryImpl(
                 }
 
             }.await()
+            Response.Success(true)
+        } catch (e: Exception) {
+            Response.Failure(e)
+        }
+    }
+
+    override suspend fun editOrder(
+        id: String,
+        phone: String,
+        address: String,
+        comment: String,
+        count: Int,
+        total: Int
+    ): EditOrderResponse {
+        return try {
+            orderRef.document(id).update(
+                mapOf(
+                    ID to id,
+                    PHONE to phone,
+                    ADDRESS to address,
+                    COMMENT to comment,
+                    COUNT to count,
+                    TOTAL to total
+                )
+            )
+            Response.Success(true)
+        } catch (e: Exception) {
+            Response.Failure(e)
+        }
+    }
+
+    override suspend fun deleteOrder(id: String): DeleteOrderResponse {
+        return try {
+            orderRef.document(id).update(
+                mapOf(
+                    ID to id,
+                    STATUS to DELETED,
+                    DELETED_TIME to FieldValue.serverTimestamp()
+                )
+            )
             Response.Success(true)
         } catch (e: Exception) {
             Response.Failure(e)

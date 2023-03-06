@@ -1,9 +1,10 @@
 package com.stirkaparus.stirkaparus.graphs
 
-import androidx.navigation.*
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
+import androidx.navigation.navigation
 import com.stirkaparus.stirkaparus.presentation.add_new_user.AddNewUserScreen
-import com.stirkaparus.stirkaparus.presentation.carpets.CarpetsScreen
 
 fun NavGraphBuilder.profileNavGraph(
     navController: NavHostController
