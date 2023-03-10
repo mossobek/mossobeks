@@ -4,6 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.stirkaparus.stirkaparus.presentation.UpdateScreen
 import com.stirkaparus.stirkaparus.presentation.forgotPassword.ForgotPasswordScreen
 import com.stirkaparus.stirkaparus.presentation.login.LoginScreen
 import com.stirkaparus.stirkaparus.presentation.notAdmin.NotAdminScreen
@@ -36,6 +37,10 @@ fun NavGraphBuilder.authNavGraph(
                 })
 
         }
+        composable(route = AuthScreen.Update.route) {
+            UpdateScreen()
+
+        }
 
 
 
@@ -65,9 +70,10 @@ fun NavGraphBuilder.authNavGraph(
 sealed class AuthScreen(val route: String) {
 
     object Login : AuthScreen(route = "LOGIN")
+    object Update : AuthScreen(route = "UPDATE")
     object SignUp : AuthScreen(route = "SING_UP")
     object UserActivation : AuthScreen(route = "USER_ACTIVATION")
     object ForgotPassword : AuthScreen(route = "FORGOT_PASSWORD")
-     object Verify : AuthScreen(route = "VERIFY")
+    object Verify : AuthScreen(route = "VERIFY")
 
 }

@@ -3,6 +3,9 @@ package com.stirkaparus.driver.presentation
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
@@ -19,8 +22,11 @@ import com.stirkaparus.driver.common.Constants.ROLE
 import com.stirkaparus.driver.common.Constants.USERS
 import com.stirkaparus.driver.domain.repository.AuthRepository
 import com.stirkaparus.driver.domain.repository.UserRepository
+import com.stirkaparus.driver.domain.repository.VersionControlResponse
+import com.stirkaparus.model.Response
 import com.stirkaparus.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,8 +42,21 @@ class MainViewModel @Inject constructor(
 
     init {
         getAuthState()
+        versionControl()
+
     }
 
+    var versionControlResponse by mutableStateOf<VersionControlResponse>(
+        Response
+        .Loading)
+        private set
+
+
+    private fun versionControl() = viewModelScope.launch {
+        authRepo.versionControl().collect { response ->
+            versionControlResponse = response
+        }
+    }
     fun getAuthState() = authRepo.getAuthState(viewModelScope)
     val isEmailVerified get() = authRepo.currentUser?.isEmailVerified ?: false
 
@@ -56,22 +75,7 @@ class MainViewModel @Inject constructor(
     }
 
 
-    fun getUserDataFromDataStore(context: Context): Boolean {
-        val user = User()
 
-        user.id = prefs.getString(ID, null)
-        user.email = prefs.getString(EMAIL, null)
-        user.role = prefs.getString(ROLE, null)
-        user.city = prefs.getString(CITY, null)
-        user.phone = prefs.getString(PHONE, null)
-        user.name = prefs.getString(NAME, null)
-        user.company_id = prefs.getString(COMPANY_ID, null)
-        user.company_name = prefs.getString(COMPANY_NAME, null)
-        Log.e(TAG, "getUserDataFromDataStore: ${user.role}")
-
-        return             user.role == DRIVER
-
-    }
 
     fun tryGetUserDataFromFireStore(
         success: () -> Unit,

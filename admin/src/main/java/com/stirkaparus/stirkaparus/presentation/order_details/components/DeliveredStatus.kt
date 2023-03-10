@@ -22,6 +22,7 @@ import com.stirkaparus.stirkaparus.presentation.order_details.OrderDetailsViewMo
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun DeliveredStatus(
+    onDismiss:()->Unit,
     id: String,
     viewModel: OrderDetailsViewModel = hiltViewModel(),
 ) {
@@ -82,6 +83,7 @@ fun DeliveredStatus(
                         DialogOrderCustomButton(
                             enable = true,
                             onClick = {
+                                onDismiss()
                                 viewModel.orderDeliveredStatus(id)
                                 viewModel.closeDeliveredDialog()
                             },

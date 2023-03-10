@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun NavigateToMainScreen() = navController.navigate(Graph.HOME)
+    private fun NavigateToMainScreen() = navController.navigate(Graph.SPLASH)
     {
         popUpTo(navController.graph.id) {
             inclusive = true

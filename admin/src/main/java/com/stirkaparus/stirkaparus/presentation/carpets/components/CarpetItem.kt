@@ -1,236 +1,168 @@
 package com.stirkaparus.stirkaparus.presentation.carpets.components
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.Card
-import androidx.compose.material.Divider
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import android.annotation.SuppressLint
+import android.util.Log
+import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalProvider
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.stirkaparus.model.Carpet
+import com.stirkaparus.stirkaparus.common.Constants
+import com.stirkaparus.stirkaparus.presentation.carpets.CarpetsViewModel
+import com.stirkaparus.stirkaparus.presentation.components.SmallSpacer
+import com.stirkaparus.stirkaparus.presentation.order_edit_screen.OrderEditCustomTextFieldDigits
+import com.stirkaparus.stirkaparus.ui.theme.ButtonBlueColor
+import com.stirkaparus.stirkaparus.ui.theme.DisableButtonColor
+import com.stirkaparus.stirkaparus.ui.theme.TextLabelColor
+import es.dmoral.toasty.Toasty
+import kotlin.math.roundToInt
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 fun CarpetItem(
     carpet: Carpet,
-    modifier: Modifier = Modifier ,
-    onDeleteItemMenuClick: () -> Unit,
-    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    onDeleteClick: (carpet: Carpet) -> Unit,
+    onEditClick: (carpet: Carpet) -> Unit,
+) {
 
-    ) {
 
     Card(
-        modifier = Modifier.fillMaxWidth() ,
+        shape = RoundedCornerShape(0.dp),
+        modifier = Modifier.fillMaxWidth(),
         content = {
-            Column(Modifier.fillMaxSize()) {
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .padding(
+
+                        start = 8.dp,
+                        end = 8.dp,
+
+                        )
+            ) {
+
+                Row(
+                    Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "№0000001", fontSize = 18.sp,
+                            textAlign = TextAlign.End,
+                            color = Color.Gray
+                        )
+                    }
+                    Row(horizontalArrangement = Arrangement.End) {
+
+                        IconButton(
+                            onClick = {
+                                onEditClick(carpet)
+                            }
+
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Edit,
+                                contentDescription = null,
+                                tint = Color.Gray
+                            )
+                        }
+                        IconButton(
+                            onClick = { onDeleteClick(carpet) }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = null,
+                                tint = Color.Gray
+                            )
+                        }
+                    }
+                }
+
                 Divider()
 
+                CarpetRow(desc = "Ширина", text = carpet.sideA.toString(), descEnd = " см")
+                CarpetRow(desc = "Длина", text = carpet.sideB.toString(), descEnd = " см")
+                CarpetRow(desc = "Сумма", text = carpet.sum.toString(), descEnd = " руб.")
+                CarpetRow(
+                    desc = "Квадратов",
+                    text = carpet.square.toString(),
+                    descEnd = " кв.",
+                    divider = false
+                )
 
-                CarpetRow(desc = "Ширина", text = carpet.sideA.toString())
-
-
-                Divider()
 
             }
         })
 
 }
 
-@Composable
-private fun CarpetRow(desc: String, text: String) {
 
-    Row(modifier = Modifier.fillMaxWidth()) {
-        Row(Modifier.weight(1f)) {
-            Text(text = desc)
+
+@Composable
+private fun CarpetRow(desc: String, text: String, divider: Boolean = true, descEnd: String) {
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 2.dp)
+    ) {
+        Row(
+            Modifier
+                .weight(1f)
+                .padding(vertical = 14.dp)
+        ) {
+            Text(fontSize = 18.sp, text = desc, color = Color.Gray)
         }
-        Row(Modifier.weight(1f)) {
-            Text(text = text)
+        Row(Modifier.weight(2f), horizontalArrangement = Arrangement.End) {
+            Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.End) {
+                Row(
+                    Modifier.padding(vertical = 14.dp),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.Bottom
+                ) {
+
+                    Text(text = text, fontSize = 18.sp, textAlign = TextAlign.End)
+                    Text(
+                        text = descEnd,
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.End,
+                        color = Color.Gray
+                    )
+                }
+                if (divider) {
+
+                    Divider()
+                }
+            }
+
+
         }
     }
 
 }
-//    Box(
-//        modifier = modifier
-//            .padding(4.dp)
-//            .border(
-//                width = 1.dp,
-//                color = Color.LightGray,
-//                shape = RoundedCornerShape(size = 5.dp)
-//            )
-//            .clip(shape = RoundedCornerShape(size = 5.dp))
-//            .background(Color.White),
-//        content = {
-//
-//            Column(
-//                modifier = Modifier
-//                    .background(Color.White)
-//                    .fillMaxSize()
-//                    .padding(16.dp)
-//
-//            ) {
-//
-//                Row(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(4.dp),
-//                    horizontalArrangement = Arrangement.SpaceBetween,
-//                    verticalAlignment = Alignment.Top
-//                ) {
-//
-//                    Row(
-//                        modifier = Modifier, verticalAlignment = Alignment.CenterVertically
-//                    ) {
-//
-//                        Text(
-//                            modifier = Modifier.padding(start = 4.dp),
-//                            text = "№ ",
-//                            maxLines = 2,
-//                            fontSize = 16.sp
-//                        )
-//
-//                        Text(
-//                            modifier = Modifier.padding(start = 4.dp),
-//                            text = carpet.serial.toString(),
-//                            maxLines = 2,
-//                            fontSize = 16.sp
-//                        )
-//
-//                    }
-//
-//                    Row(
-//                        modifier = Modifier.weight(1f),
-//                        horizontalArrangement = Arrangement.End,
-//                        verticalAlignment = Alignment.CenterVertically,
-//                    ) {
-//                        IconButton(
-//                            modifier = Modifier
-//                                .size(20.dp)
-//                                .padding(0.dp),
-//                            onClick = onDeleteItemMenuClick,
-//                        ) {
-//                            Icon(
-//
-//                                imageVector = Icons.Default.Delete,
-//                                contentDescription = "Delete order",
-//                                tint = MaterialTheme.colors.onSurface
-//                            )
-//                        }
-//                    }
-//
-//                }
-//                Spacer(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .background(Color.LightGray)
-//                        .height(2.dp)
-//                )
-//                Row(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(4.dp),
-//                    horizontalArrangement = Arrangement.SpaceBetween,
-//                    verticalAlignment = Alignment.Top
-//                ) {
-//
-//                    Row(
-//                        modifier = Modifier.weight(1f),
-//                        verticalAlignment = Alignment.CenterVertically
-//                    ) {
-//
-//                        Icon(imageVector = Icons.Default.Expand, contentDescription = "side a")
-//
-//                        Text(
-//                            modifier = Modifier.padding(start = 4.dp),
-//                            text = carpet.sideA.toString(),
-//                            maxLines = 2,
-//                            fontSize = 16.sp
-//                        )
-//
-//                    }
-//
-//                    Row(
-//                        modifier = Modifier.weight(1f),
-//                        horizontalArrangement = Arrangement.Start,
-//                        verticalAlignment = Alignment.CenterVertically,
-//                    ) {
-//                        Icon(
-//                            modifier = Modifier.rotate(90f),
-//                            imageVector = Icons.Default.Expand,
-//                            contentDescription = "side a"
-//                        )
-//                        Text(
-//                            modifier = Modifier.padding(start = 4.dp),
-//                            text = carpet.sideB.toString(),
-//                            maxLines = 2,
-//                            fontSize = 16.sp
-//                        )
-//
-//
-//                    }
-//
-//                }
-//                Spacer(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .background(Color.LightGray)
-//                        .height(2.dp)
-//                )
-//                Row(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(4.dp),
-//                    horizontalArrangement = Arrangement.SpaceBetween,
-//                    verticalAlignment = Alignment.Top
-//                ) {
-//
-//                    Row(
-//                        modifier = Modifier.weight(1f),
-//                        verticalAlignment = Alignment.CenterVertically
-//                    ) {
-//
-//                        Icon(
-//                            imageVector = Icons.Default.AttachMoney,
-//                            contentDescription = "AttachMoney"
-//                        )
-//
-//                        Text(
-//                            modifier = Modifier.padding(start = 4.dp),
-//                            text = carpet.sum.toString(),
-//                            maxLines = 2,
-//                            fontSize = 16.sp
-//                        )
-//
-//                    }
-//                    Spacer(
-//                        modifier = Modifier
-//                            .background(Color.LightGray)
-//                            .height(2.dp)
-//                    )
-//                    Row(
-//                        modifier = Modifier.weight(1f),
-//                        horizontalArrangement = Arrangement.Start,
-//                        verticalAlignment = Alignment.CenterVertically,
-//                    ) {
-//                        Icon(
-//                            modifier = Modifier,
-//                            imageVector = Icons.Default.AspectRatio,
-//                            contentDescription = "side a"
-//                        )
-//                        Text(
-//                            modifier = Modifier.padding(start = 4.dp),
-//                            text = carpet.square.toString(),
-//                            maxLines = 2,
-//                            fontSize = 16.sp
-//                        )
-//
-//
-//                    }
-//
-//                }
-//            }
-//
-//
-//        }
-//    )
-//}

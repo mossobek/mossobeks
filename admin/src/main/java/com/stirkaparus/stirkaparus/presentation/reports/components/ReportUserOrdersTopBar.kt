@@ -6,8 +6,10 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material.icons.filled.Report
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.stirkaparus.stirkaparus.presentation.components.BackIcon
 import com.stirkaparus.stirkaparus.presentation.reports.ReportsViewModel
@@ -22,9 +24,10 @@ fun ReportUserOrdersTopBar(
     navBack: () -> Unit
 ) {
     TopAppBar(
-        contentColor = Blue14,
+        backgroundColor = Color.White,
+        contentColor = Color.Black,
         title = {
-            Text(color = Blue16, text = "Рассчет для : $username")
+            Text(color = Color.Black, text = "Рассчет для : $username")
 
         }, navigationIcon = {
             BackIcon {
@@ -35,7 +38,11 @@ fun ReportUserOrdersTopBar(
             IconButton(onClick = {
                 viewModel.openUserReportDialog()
             }) {
-                Icon(imageVector = Icons.Filled.Check, contentDescription = null, tint = Blue15)
+                Icon(
+                    imageVector = Icons.Filled.Checklist,
+                    contentDescription = null,
+                    tint = Color.Gray
+                )
             }
         })
 }

@@ -9,4 +9,5 @@ data class User(
     var phone:String? =  "",
     var company_id:String? =  "",
     var company_name:String? =  "",
+    var active:Boolean? =  null,
 )

@@ -20,7 +20,9 @@ const val TAG = "ReportsScreen"
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun ReportsScreen(
-    navigateToUserOrdersScreen: (userId: String,username:String) -> Unit,
+    navBack: () -> Unit,
+    navToAllReports: ( ) -> Unit,
+    navigateToUserOrdersScreen: (userId: String, username: String) -> Unit,
     viewModel: ReportsViewModel = hiltViewModel(),
     navController: NavController,
     bottomPadding: PaddingValues,
@@ -29,7 +31,11 @@ fun ReportsScreen(
 
     Scaffold(
         topBar = {
-            ReportsTopBar()
+            ReportsTopBar(navBack = navBack, navToAllReports = {
+                navToAllReports(
+
+                )
+            })
         },
         content = { padding ->
             viewModel.getUserList()
@@ -39,8 +45,8 @@ fun ReportsScreen(
                     ReportsUserListContent(
                         padding = padding,
                         userList = reportOrderListResponse.data!!,
-                        navigateToUserOrdersScreen = {userId,username->
-                            navigateToUserOrdersScreen(userId,username)
+                        navigateToUserOrdersScreen = { userId, username ->
+                            navigateToUserOrdersScreen(userId, username)
                         }
                     )
                 }

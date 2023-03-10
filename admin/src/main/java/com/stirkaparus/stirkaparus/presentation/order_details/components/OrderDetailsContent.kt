@@ -33,6 +33,8 @@ fun OrderDetailsContent(
     viewModel: OrderDetailsViewModel = hiltViewModel(),
     carpetsViewModel: CarpetsViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
+
     if (carpetsViewModel.addCarpetResponse == Response.Loading) {
         ProgressDialog()
 
@@ -42,13 +44,20 @@ fun OrderDetailsContent(
         initialValue = ModalBottomSheetValue.Hidden, skipHalfExpanded = true
     )
     var currentSheetContent by remember {
-        mutableStateOf<BottomSheetScreen>(BottomSheetScreen.Screen1)
+        mutableStateOf<BottomSheetScreen>(BottomSheetScreen.StatusChangeScreen)
     }
 
 
 
 
+    DeliveredStatus(
+        id = id,
+        onDismiss = {
+            scope.launch {
 
+                statusBottomState.hide()
+            }
+        })
     AddCarpet()
     OrderTaken()
     DeliveryOrder()
@@ -61,12 +70,14 @@ fun OrderDetailsContent(
         modifier = Modifier.fillMaxHeight(), sheetState = statusBottomState, sheetContent = {
             Log.e(TAG, "OrderDetailsContent: $currentSheetContent")
             when (currentSheetContent) {
-                is BottomSheetScreen.Screen1 -> {
+                is BottomSheetScreen.StatusChangeScreen -> {
+
                     StatusChange(
+                        order= order,
                         id = id,
                     )
                 }
-                is BottomSheetScreen.Screen2 -> {
+                is BottomSheetScreen.AddCarpetSheetScreen -> {
                     AddCarpetSheet(id = id) {
                         scope.launch {
                             statusBottomState.hide()
@@ -76,14 +87,26 @@ fun OrderDetailsContent(
             }
         }, sheetShape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp), sheetElevation = 12.dp
     ) {
-        OrderTextFieldBox(order = order, onStatusClick = {
-            scope.launch {
-                currentSheetContent = BottomSheetScreen.Screen1
-                statusBottomState.animateTo(ModalBottomSheetValue.Expanded)
-            }
+        OrderTextFieldBox(order = order,
+            onStatusClick = {
+
+                if (order.reported == false){
+
+                    scope.launch {
+                        currentSheetContent = BottomSheetScreen.StatusChangeScreen
+                        statusBottomState.animateTo(ModalBottomSheetValue.Expanded)
+                    }
+
+
+                } else{
+                    Toasty.error(context,"Заказ нельзя изменить", Toast.LENGTH_SHORT,true).show()
+                }
+
+
+
         }, onAddCarpetClick = {
             scope.launch {
-                currentSheetContent = BottomSheetScreen.Screen2
+                currentSheetContent = BottomSheetScreen.AddCarpetSheetScreen
                 statusBottomState.animateTo(ModalBottomSheetValue.Expanded)
             }
         }, navToCarpets = {
@@ -93,6 +116,6 @@ fun OrderDetailsContent(
 }
 
 sealed class BottomSheetScreen() {
-    object Screen1 : BottomSheetScreen()
-    object Screen2 : BottomSheetScreen()
+    object StatusChangeScreen : BottomSheetScreen()
+    object AddCarpetSheetScreen : BottomSheetScreen()
 }

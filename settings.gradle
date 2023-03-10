@@ -18,3 +18,4 @@ rootProject.name = "StirkaParus"
 include ':admin'
 include ':driver'
 include ':model'
+include ':repo'

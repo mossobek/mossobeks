@@ -6,10 +6,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.stirkaparus.driver.presentation.BottomBarScreen
-import com.stirkaparus.driver.presentation.addOrder.AddOrderScreen
-import com.stirkaparus.driver.presentation.allOrders.AllOrders
-import com.stirkaparus.driver.presentation.orders.CreatedOrders
-import com.stirkaparus.driver.presentation.orders.FinishedOrders
+import com.stirkaparus.driver.presentation.add_order.AddOrderScreen
+import com.stirkaparus.driver.presentation.all_orders.AllOrders
 import com.stirkaparus.driver.presentation.report.ReportsScreen
 
 
@@ -22,7 +20,12 @@ fun HomeNavGraph(navController: NavHostController, paddingValue: PaddingValues) 
     ) {
 
         composable(route = BottomBarScreen.Orders.route) {
-           AllOrders(navController = navController, paddingValue)
+            AllOrders(
+                navController = navController,
+                paddingValue = paddingValue,
+                navigateToOrderScreen = {
+                    navController.navigate(OrderDetailsScreen.Details.route+ "/${it}")
+                })
 
         }
 
@@ -33,10 +36,17 @@ fun HomeNavGraph(navController: NavHostController, paddingValue: PaddingValues) 
         }
         composable(route = BottomBarScreen.Reports.route) {
 
-            ReportsScreen(navController = navController, paddingValue)
+            ReportsScreen(
+                navController = navController,
+                paddingValue = paddingValue,
+                navigateToProfileScreen = {
+                    navController.navigate(ProfileScreen.UserProfileScreen.route)
+                }
+            )
 
         }
         orderNavGraph(navController = navController)
+        reportsNavGraph(navController = navController)
 
     }
 }

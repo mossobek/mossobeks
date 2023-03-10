@@ -4,12 +4,18 @@ import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.stirkaparus.model.Order
 import com.stirkaparus.model.Response
 import com.stirkaparus.model.Response.*
 import com.stirkaparus.model.User
+import com.stirkaparus.model.Version
 import com.stirkaparus.stirkaparus.common.Constants
+import com.stirkaparus.stirkaparus.common.Constants.ADMIN
+import com.stirkaparus.stirkaparus.common.Constants.SETTING
+import com.stirkaparus.stirkaparus.common.Constants.VERSION
+import com.stirkaparus.stirkaparus.common.Constants.VERSION_CONTROL
 import com.stirkaparus.stirkaparus.domain.repository.*
- import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
@@ -32,7 +38,7 @@ class AuthRepositoryImpl @Inject constructor(
     ): SignInResponse {
         return try {
             auth.createUserWithEmailAndPassword(email, password).await()
-              Success(true)
+            Success(true)
         } catch (e: Exception) {
             Failure(e)
         }
@@ -120,6 +126,28 @@ class AuthRepositoryImpl @Inject constructor(
             Failure(e)
 
         }
+
+    }
+
+    override fun versionControl() = callbackFlow {
+        val snapshotListener = FirebaseFirestore
+            .getInstance()
+            .collection(SETTING)
+            .document(VERSION_CONTROL)
+            .addSnapshotListener { snapshot, e ->
+                val versionResponse = if (snapshot != null) {
+                    val vControl = snapshot.toObject(Version::class.java)
+                    Response.Success(vControl)
+                } else {
+                    Response.Failure(e)
+                }
+                trySend(versionResponse)
+
+            }
+        awaitClose {
+            snapshotListener.remove()
+        }
+
 
     }
 }

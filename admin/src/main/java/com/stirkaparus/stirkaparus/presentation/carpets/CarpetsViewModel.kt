@@ -23,12 +23,14 @@ import com.stirkaparus.stirkaparus.common.Constants.CARPETS
 import com.stirkaparus.stirkaparus.domain.repository.AddCarpetResponse
 import com.stirkaparus.stirkaparus.domain.repository.CarpetsRepository
 import com.stirkaparus.stirkaparus.domain.repository.OrdersRepository
+import com.stirkaparus.stirkaparus.domain.repository.UpdateCarpetResponse
 import com.stirkaparus.stirkaparus.presentation.order_details.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.log
 
 @HiltViewModel
 class CarpetsViewModel @Inject constructor(
@@ -36,7 +38,16 @@ class CarpetsViewModel @Inject constructor(
     private val prefs: SharedPreferences, private val db: FirebaseFirestore
 ) : ViewModel() {
 
+    var editCarpetDialog by mutableStateOf(false)
+    var carpetDialog by mutableStateOf(Carpet())
+    var deleteCarpetDialog by mutableStateOf(false)
+
     var addCarpetResponse by mutableStateOf<AddCarpetResponse>(
+        Response.Success(
+            false
+        )
+    )
+    var updateCarpetResponse by mutableStateOf<UpdateCarpetResponse>(
         Response.Success(
             false
         )
@@ -77,7 +88,14 @@ class CarpetsViewModel @Inject constructor(
 
         addCarpetResponse = Response.Loading
         addCarpetResponse = repo.addCarpetInFirestore(carpet)
-     }
+    }
+
+    fun updateCarpet(oldCarpet: Carpet, carpet: Carpet) = viewModelScope.launch {
+        Log.e(TAG, "updateCarpet oldCarpet: $oldCarpet")
+        Log.e(TAG, "updateCarpet carpet: $carpet")
+        updateCarpetResponse = Response.Loading
+        updateCarpetResponse = repo.updateCarpetInFirestore(oldCarpet = oldCarpet, carpet = carpet)
+    }
 
     fun deleteCarpet(
         orderId: String?, carpetId: String?, success: () -> Unit, failure: () -> Unit
@@ -85,6 +103,24 @@ class CarpetsViewModel @Inject constructor(
         db.collection(Constants.ORDERS).document(orderId.toString())
             .collection(Constants.CARPETS).document(carpetId.toString()).delete()
             .addOnSuccessListener { success() }.addOnFailureListener { failure() }
+    }
+
+    fun openEditCarpetDialog(carpet: Carpet) {
+        carpetDialog = carpet
+
+        editCarpetDialog = true
+    }
+
+    fun closeEditCarpetDialog() {
+        editCarpetDialog = false
+    }
+
+    fun openDeleteCarpetDialog(carpet: Carpet) {
+        deleteCarpetDialog = true
+    }
+
+    fun closeDeleteCarpetDialog() {
+        deleteCarpetDialog = false
     }
 
 }

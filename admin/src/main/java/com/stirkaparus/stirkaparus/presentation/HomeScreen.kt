@@ -20,6 +20,7 @@ import androidx.navigation.compose.rememberNavController
 import com.stirkaparus.stirkaparus.BottomBarScreen
 import com.stirkaparus.stirkaparus.MainViewModel
 import com.stirkaparus.stirkaparus.graphs.HomeNavGraph
+import com.stirkaparus.stirkaparus.presentation.components.VControl
 import kotlinx.coroutines.delay
 
 const val TAG = "HomeScreen"
@@ -31,6 +32,7 @@ const val TAG = "HomeScreen"
 )
 @Composable
 fun HomeScreen(
+    navToUpdateScreen: () -> Unit,
     navigateToUserActivationScreen: () -> Unit,
     mainViewModel: MainViewModel = hiltViewModel(),
     navController: NavHostController = rememberNavController()
@@ -39,7 +41,7 @@ fun HomeScreen(
     val isLoading = mutableStateOf(true)
     val navigateToProfile = mutableStateOf<Boolean?>(null)
     val context = LocalContext.current
-
+    VControl(navToUpdateScreen = navToUpdateScreen)
     Scaffold(
         bottomBar = {
             BottomBar(navController = navController)
@@ -79,7 +81,7 @@ fun HomeScreen(
                         navigateToProfile.value = true
 
                         Log.e(TAG, "HomeScreen: 2")
-                    }else{
+                    } else {
                         navigateToProfile.value = false
                     }
                 }, failure = {
@@ -93,9 +95,11 @@ fun HomeScreen(
         if (isLoading.value) {
             ProgressDialog()
         }
-        Log.e(TAG, "HomeScreen: ${navigateToProfile.value}", )
+        Log.e(TAG, "HomeScreen: ${navigateToProfile.value}")
     }
 }
+
+
 
 @Composable
 fun BottomBar(navController: NavHostController) {

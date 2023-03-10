@@ -102,6 +102,14 @@ object AppModule {
         firebaseFirestore = firebaseFirestore,
         prefs = prefs
     )
+    @Provides
+    fun provideAllReportsListRepository(
+        firebaseFirestore: FirebaseFirestore,
+        prefs: SharedPreferences
+    ): AllReportsListRepository = AllReportsListRepositoryImpl(
+        firebaseFirestore = firebaseFirestore,
+        prefs = prefs
+    )
 
     @Provides
     fun provideCarpetsRepository(

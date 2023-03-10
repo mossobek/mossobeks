@@ -3,6 +3,9 @@ package com.stirkaparus.stirkaparus.common
 object Constants {
 
 
+    //version
+    const val VERSION: Int = 1
+
     const val TOTAL: String = "total"
 
     /** FIRE STORE CONSTANTS */
@@ -26,6 +29,10 @@ object Constants {
     const val DELETED_RU: String = "Удален"
     const val CANCELED = "canceled"
     const val CANCELED_RU = "Отменен"
+    const val SIDE_A = "sideA"
+    const val SIDE_B = "sideB"
+    const val SUM = "sum"
+    const val SQUARE = "square"
 
     //user
     const val ROLE: String = "role"
@@ -45,6 +52,8 @@ object Constants {
 
 
     const val SIGN_IN = "Войти"
+    const val SETTING = "setting"
+    const val VERSION_CONTROL = "versionControl"
 
     //DataStore
     const val LOGIN_SCREEN_TOP_BAR_TEXT = "Вход"
@@ -76,7 +85,7 @@ object Constants {
     const val LAST_NAME: String = "last_name"
     const val CURR_REPORT_ID: String = "current_report_id"
     const val REPORT_ID: String = "report_id"
-    const val REPORTS: String = "reportsT"
+    const val REPORTS: String = "reports"
 
     /** FIRE STORE CONSTANTS */
 
@@ -140,7 +149,7 @@ object Constants {
 
     //Messages
     const val VERIFY_EMAIL_MESSAGE = "We've sent you an email with a link to verify the email."
-    const val EMAIL_NOT_VERIFIED_MESSAGE = "Your email is not verified."
+    const val EMAIL_NOT_VERIFIED_MESSAGE = "Ваш email не подтвержден."
     const val RESET_PASSWORD_MESSAGE = "We've sent you an email with a link to reset the password."
     const val REVOKE_ACCESS_MESSAGE = "You need to re-authenticate before revoking the access."
     const val ACCESS_REVOKED_MESSAGE = "Your access has been revoked."

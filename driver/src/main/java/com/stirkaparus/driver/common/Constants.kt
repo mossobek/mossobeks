@@ -2,6 +2,13 @@ package com.stirkaparus.driver.common
 
 object Constants {
 
+
+    //version
+    const val VERSION: Int = 1
+    const val SETTING = "setting"
+    const val VERSION_CONTROL = "versionControl"
+    const val COMPANIES = "companies"
+
     //Useful
     const val NO_VALUE = ""
 
@@ -15,10 +22,13 @@ object Constants {
     //DataStore
     const val LOGIN_SCREEN_TOP_BAR_TEXT = "Вход"
     const val REPORT_SCREEN_TOP_BAR_TEXT = "Отчеты"
+    const val ALL_ORDERS_SCREEN_TOP_BAR_TEXT = "Заказы"
     const val DELIVERED_BY_USER = "delivered_by_user"
     const val CANCELED = "canceled_time"
     const val CANCELED_TIME = "canceled"
     const val CANCELED_RU = "Отменен"
+    const val ADDRESS_RU = "Адрес"
+    const val COMMENT_RU = "Комментарий"
     const val SERIAL: String = "serial"
 
 

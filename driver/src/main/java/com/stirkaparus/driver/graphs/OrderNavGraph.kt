@@ -1,10 +1,10 @@
 package com.stirkaparus.driver.graphs
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import androidx.navigation.*
 import androidx.navigation.compose.composable
-import com.stirkaparus.driver.presentation.orderDetails.OrderDetailsScreen
+import com.stirkaparus.driver.common.Constants.NO_VALUE
+import com.stirkaparus.driver.presentation.carpets.CarpetsScreen
+import com.stirkaparus.driver.presentation.order_details.OrderDetailsScreen
 
 fun NavGraphBuilder.orderNavGraph(
     navController: NavHostController
@@ -18,11 +18,23 @@ fun NavGraphBuilder.orderNavGraph(
             arguments = listOf(navArgument("id") {
                 type = NavType.StringType
             })
-        ) {
-            Log.e(TAG, "createdOrderNavGraph: ")
-            OrderDetailsScreen(navController = navController)
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id") ?: NO_VALUE
+            OrderDetailsScreen(
+                id = id,
+                navBack = {
+                    navController.popBackStack()
+                },
+                navToCarpets = {
+                    navController.navigate(OrderDetailsScreen.Carpets.route + "/$id")
+                },
+            )
         }
+        composable(route = OrderDetailsScreen.Carpets.route + "/{id}") {
+            CarpetsScreen(
 
+            )
+        }
     }
 }
 

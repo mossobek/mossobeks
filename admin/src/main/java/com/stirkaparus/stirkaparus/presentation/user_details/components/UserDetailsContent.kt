@@ -32,7 +32,9 @@ fun UserDetailsContent(
         SmallSpacer()
         SmallSpacer()
         SmallSpacer()
-        Button(onClick = { /*TODO*/ }) {
+        Button(onClick = {
+
+        }) {
             Text(text = "ПРОВЕРИТЬ")
 
         }

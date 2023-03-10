@@ -26,7 +26,7 @@ fun OrdersScreen(
     navController: NavHostController,
     paddingValue: PaddingValues,
     viewModel: OrdersViewModel = hiltViewModel(),
-    navigateToUserOrdersScreen:(orderId:String)->Unit
+    navigateToUserOrdersScreen: (orderId: String) -> Unit
 ) {
     val scope = rememberCoroutineScope()
 
@@ -35,14 +35,14 @@ fun OrdersScreen(
     ModalBottomSheetLayout(
         sheetState = sortBottomState,
         sheetContent = {
-                       Button(onClick = {
-                           scope.launch {
-                               sortBottomState.hide()
-                           }
+            Button(onClick = {
+                scope.launch {
+                    sortBottomState.hide()
+                }
 
-                        }){
+            }) {
 
-                       }
+            }
         },
         sheetShape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp),
         sheetElevation = 12.dp,
@@ -61,8 +61,8 @@ fun OrdersScreen(
                             padding = padding,
                             paddingValue = paddingValue,
                             orders = orderListResponse.data!!,
-                            navToOrder = { userId, ->
-                                 navigateToUserOrdersScreen(userId)
+                            navToOrder = { userId ->
+                                navigateToUserOrdersScreen(userId)
                             }
                         )
                     }

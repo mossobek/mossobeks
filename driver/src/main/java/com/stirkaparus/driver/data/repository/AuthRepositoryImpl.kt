@@ -3,12 +3,17 @@ package com.stirkaparus.driver.data.repository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuth.AuthStateListener
  import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
+import com.stirkaparus.driver.common.Constants.SETTING
+import com.stirkaparus.driver.common.Constants.VERSION_CONTROL
 import com.stirkaparus.driver.domain.repository.*
 
 import com.stirkaparus.model.Response
 import com.stirkaparus.model.Response.*
+import com.stirkaparus.model.Version
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.stateIn
@@ -105,4 +110,26 @@ class AuthRepositoryImpl @Inject constructor(
             auth.removeAuthStateListener(authStateListener)
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), auth.currentUser == null)
+
+    override fun versionControl() = callbackFlow {
+        val snapshotListener = FirebaseFirestore
+            .getInstance()
+            .collection(SETTING)
+            .document(VERSION_CONTROL)
+            .addSnapshotListener { snapshot, e ->
+                val versionResponse = if (snapshot != null) {
+                    val vControl = snapshot.toObject(Version::class.java)
+                    Response.Success(vControl)
+                } else {
+                    Response.Failure(e)
+                }
+                trySend(versionResponse)
+
+            }
+        awaitClose {
+            snapshotListener.remove()
+        }
+
+
+    }
 }

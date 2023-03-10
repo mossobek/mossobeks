@@ -10,15 +10,9 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
- import com.stirkaparus.driver.common.Constants
-import com.stirkaparus.driver.common.dataStore
-import com.stirkaparus.driver.data.repository.AddOrderRepositoryImpl
-import com.stirkaparus.driver.data.repository.AuthRepositoryImpl
-import com.stirkaparus.driver.data.repository.OrdersRepositoryImpl
-import com.stirkaparus.driver.data.repository.UserRepositoryImpl
+import com.stirkaparus.driver.common.Constants
+import com.stirkaparus.driver.data.repository.*
 import com.stirkaparus.driver.domain.repository.*
-import com.stirkaparus.driver.useCases.GetOrders
-import com.stirkaparus.driver.useCases.UseCases
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,11 +20,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-
-val Context.userDataStore: DataStore<Preferences> by preferencesDataStore(
-    // just my preference of naming including the package name
-    name = "stirkaparus.driver"
-)
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -43,26 +32,26 @@ object AppModule {
 
     @Provides
     fun provideOrdersRepository(
-        ordersRef: CollectionReference,
-        db: FirebaseFirestore
-    ): OrdersRepository = OrdersRepositoryImpl(ordersRef)
+        prefs: SharedPreferences,
+        firebaseFirestore: FirebaseFirestore
+    ): OrdersRepository =
+        OrdersRepositoryImpl(
+            prefs = prefs,
+            firebaseFirestore = firebaseFirestore
+        )
 
-    @Provides
-    fun provideUseCases(
-        repo: OrdersRepository,
-    ) = UseCases(
-        getOrders = GetOrders(repo)
-    )
 
     @Provides
     fun provideAuthRepository(): AuthRepository = AuthRepositoryImpl(
         auth = Firebase.auth
     )
+
     @Singleton
     @Provides
     fun provideSharedPrefsRepository(@ApplicationContext context: Context): SharedPreferences {
         return context.getSharedPreferences("dstirkaparus", Context.MODE_PRIVATE)
     }
+
     @Provides
     fun provideUserRepository(
         firebaseFirestore: FirebaseFirestore,
@@ -76,13 +65,25 @@ object AppModule {
     @Provides
     fun provideAddOrderRepository(
         ordersRef: CollectionReference,
-
-        ): AddOrderRepository = AddOrderRepositoryImpl(
+    ): AddOrderRepository = AddOrderRepositoryImpl(
         ordersRef
     )
 
+    @Provides
+    fun provideOrderDetailsRepository(
+        firebaseFirestore: FirebaseFirestore,
+        prefs: SharedPreferences
+    ): OrderDetailsRepository = OrderDetailsRepositoryImpl(
+        firebaseFirestore = firebaseFirestore,
+        prefs = prefs
+    )
 
-
+    @Provides
+    fun provideReportsRepository(
+        firebaseFirestore: FirebaseFirestore,
+    ): ReportsRepository = ReportsRepositoryImpl(
+        firebaseFirestore = firebaseFirestore
+    )
 
 
 }

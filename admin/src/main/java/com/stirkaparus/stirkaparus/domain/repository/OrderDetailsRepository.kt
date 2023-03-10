@@ -17,6 +17,7 @@ typealias OrderDeliveredResponse = Response<Boolean>
 interface OrderDetailsRepository {
     val currentUser: FirebaseUser?
     fun getOrderFromFirestore(id: String): Flow<OrderResponse>
+
     suspend fun changeStatusInFireStore(
         id: String,
         status: String,

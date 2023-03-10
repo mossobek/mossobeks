@@ -9,12 +9,13 @@ sealed class BottomBarScreen(
     val route: String,
     val title: String,
     val icon: ImageVector
+
 ) {
 
     object Orders : BottomBarScreen(
         route = "ORDERS",
         title = "ORDERS",
-        icon = Icons.Default.Upload
+        icon = Icons.Default.Article
     )
 
     object Add : BottomBarScreen(
@@ -22,10 +23,10 @@ sealed class BottomBarScreen(
         title = "ADD",
         icon = Icons.Default.Add
     )
+
     object Reports : BottomBarScreen(
         route = "REPORTS",
         title = "REPORTS",
-        icon = Icons.Default.Report
-
+        icon = Icons.Default.Person
     )
 }

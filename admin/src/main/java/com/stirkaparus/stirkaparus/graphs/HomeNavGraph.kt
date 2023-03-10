@@ -29,8 +29,7 @@ fun HomeNavGraph(navController: NavHostController, paddingValue: PaddingValues) 
 
         composable(route = BottomBarScreen.Orders.route) {
 
-            OrdersScreen(
-                navController = navController,
+            OrdersScreen(navController = navController,
                 paddingValue,
                 navigateToUserOrdersScreen = { userId ->
                     navController.navigate("${OrderDetailsScreen.OrderDetails.route}/${userId}")
@@ -43,22 +42,25 @@ fun HomeNavGraph(navController: NavHostController, paddingValue: PaddingValues) 
 
         }
         composable(route = BottomBarScreen.Reports.route) {
-            ReportsScreen(
-                navController = navController,
+            ReportsScreen(navController = navController,
                 bottomPadding = paddingValue,
                 navigateToUserOrdersScreen = { userId, username ->
                     navController.navigate("${ReportsScreens.ReportUserOrdersListScreen.route}/${userId}/${username}")
                 },
+                navBack = {
+                    navController.popBackStack()
+                },
+                navToAllReports = {
+                    navController.navigate(ReportsScreens.AllReportsList.route)
 
-                )
+                })
 
         }
         composable(route = BottomBarScreen.Profile.route) {
 
-            ProfileScreen(paddingValue,
-                navToAddUserScreen = {
-                    navController.navigate(ProfileScreens.AddNewUser.route)
-                })
+            ProfileScreen(paddingValue, navToAddUserScreen = {
+                navController.navigate(ProfileScreens.AddNewUser.route)
+            })
 
         }
 

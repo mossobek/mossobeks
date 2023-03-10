@@ -2,7 +2,9 @@ package com.stirkaparus.driver.domain.repository
 
 import com.google.firebase.auth.FirebaseUser
 import com.stirkaparus.model.Response
+import com.stirkaparus.model.Version
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
 
@@ -13,6 +15,7 @@ typealias SignInResponse = Response<Boolean>
 typealias SendPasswordResetEmailResponse = Response<Boolean>
 typealias RevokeAccessResponse = Response<Boolean>
 typealias AuthStateResponse = StateFlow<Boolean>
+typealias VersionControlResponse = Response<Version>
 
 interface AuthRepository {
     val currentUser: FirebaseUser?
@@ -33,4 +36,7 @@ interface AuthRepository {
     suspend fun revokeAccess(): RevokeAccessResponse
 
     fun getAuthState(viewModelScope: CoroutineScope): AuthStateResponse
+
+    fun versionControl(): Flow<VersionControlResponse>
+
 }

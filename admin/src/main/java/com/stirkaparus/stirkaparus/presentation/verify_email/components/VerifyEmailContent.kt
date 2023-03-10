@@ -19,10 +19,20 @@ fun VerifyEmailContent(
     reloadUser: () -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxSize().padding(padding).padding(start = 32.dp, end = 32.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(padding)
+            .padding(start = 32.dp, end = 32.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+        Text(
+            text = "Мы отправили вам электронное письмо со ссылкой для подтверждения электронной почты.",
+            fontSize = 15.sp
+        )
+        SmallSpacer()
+        SmallSpacer()
         Text(
             modifier = Modifier.clickable {
                 reloadUser()

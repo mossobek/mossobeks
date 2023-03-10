@@ -19,6 +19,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.stirkaparus.driver.graphs.HomeNavGraph
 import com.stirkaparus.driver.presentation.components.ProgressDialog
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 const val TAG = "HomeScreen"
@@ -30,48 +31,19 @@ const val TAG = "HomeScreen"
 )
 @Composable
 fun HomeScreen(
-    navigateToProfileVerifyScreen: () -> Unit,
-    mainViewModel: MainViewModel = hiltViewModel(),
+    navToUpdateScreen: () -> Unit,
     navController: NavHostController = rememberNavController(),
 
     ) {
-    val isLoading = mutableStateOf(false)
-    val navigateToProfile = mutableStateOf(false)
-    val context = LocalContext.current
+    VControl(navToUpdateScreen = navToUpdateScreen)
 
-    Scaffold(bottomBar = { BottomBar(navController = navController) }) { paddingValue ->
+    Scaffold(bottomBar = {
+        BottomBar(navController = navController)
+    }) { paddingValue ->
+
         HomeNavGraph(navController = navController, paddingValue)
 
-        LaunchedEffect(Unit) {
-            if (navigateToProfile.value) {
-                navigateToProfileVerifyScreen()
-            }
-        }
 
-
-        if (mainViewModel.getUserDataFromDataStore(context)) {
-            //getUserDataFromDataStore() false
-            isLoading.value = false
-            Log.e(TAG, "HomeScreen: 1")
-
-        } else {
-            mainViewModel.tryGetUserDataFromFireStore(success = {
-                isLoading.value = false
-                if (!mainViewModel.getUserDataFromDataStore(context)) {
-                    navigateToProfile.value = true
-                    Log.e(TAG, "HomeScreen: 2")
-                }
-            }, failure = {
-                isLoading.value = false
-                //navigate to verify profile
-                navigateToProfile.value = true
-                Log.e(TAG, "HomeScreen: 3")
-            })
-        }
-
-        if (isLoading.value) {
-            ProgressDialog()
-        }
     }
 }
 

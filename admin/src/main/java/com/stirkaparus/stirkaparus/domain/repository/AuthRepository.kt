@@ -4,7 +4,9 @@ import android.content.Context
 import com.google.firebase.auth.FirebaseUser
 import com.stirkaparus.model.Response
 import com.stirkaparus.model.User
+import com.stirkaparus.model.Version
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
 
@@ -16,6 +18,7 @@ typealias DeleteUserResponse = Response<Boolean>
 typealias SendPasswordResetEmailResponse = Response<Boolean>
 typealias RevokeAccessResponse = Response<Boolean>
 typealias AuthStateResponse = StateFlow<Boolean>
+typealias VersionControlResponse = Response<Version>
 
 interface AuthRepository {
     val currentUser: FirebaseUser?
@@ -42,4 +45,6 @@ interface AuthRepository {
     fun getAuthState(viewModelScope: CoroutineScope): AuthStateResponse
 
     suspend fun checkUserData(context: Context): SignInResponse
+
+     fun versionControl(): Flow<VersionControlResponse>
 }

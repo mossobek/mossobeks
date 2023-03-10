@@ -9,8 +9,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stirkaparus.driver.common.Constants.COMPANY_ID
+import com.stirkaparus.driver.domain.repository.OrdersRepository
 import com.stirkaparus.driver.domain.repository.OrdersResponse
-import com.stirkaparus.driver.useCases.UseCases
 import com.stirkaparus.model.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -18,8 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OrdersViewModel @Inject constructor(
-    private val useCases: UseCases,
-    private val prefs: SharedPreferences
+    private val prefs: SharedPreferences,
+    private val repo: OrdersRepository
 ) : ViewModel() {
 
 
@@ -32,8 +32,7 @@ class OrdersViewModel @Inject constructor(
 
 
     private fun getOrders() = viewModelScope.launch {
-        val companyId = prefs.getString(COMPANY_ID, "")
-        useCases.getOrders(companyId.toString()).collect { response ->
+         repo.getOrdersFromFireStore().collect { response ->
             Log.e(TAG, "getOrders: $response")
             ordersResponse = response
         }

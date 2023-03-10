@@ -3,6 +3,7 @@ package com.stirkaparus.stirkaparus.graphs
 import androidx.navigation.*
 import androidx.navigation.compose.composable
 import com.stirkaparus.stirkaparus.common.Constants
+import com.stirkaparus.stirkaparus.presentation.allReportsList.AllReportsListScreen
 import com.stirkaparus.stirkaparus.presentation.reports.components.ReportUserOrdersListScreen
 
 
@@ -25,11 +26,20 @@ fun NavGraphBuilder.reportsNavGraph(
                 username = username,
                 id = id,
                 navBack = {
-
+                    navController.popBackStack()
                 },
                 navigateToOrderScreen = {
 
                 })
+        }
+        composable(
+            route = ReportsScreens.AllReportsList.route
+        ) {
+            AllReportsListScreen(
+                navBack = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
 
@@ -39,7 +49,9 @@ fun NavGraphBuilder.reportsNavGraph(
 sealed class ReportsScreens(val route: String) {
 
     object ReportSearch : ReportsScreens(route = "SEARCH")
+    object AllReportsList : ReportsScreens(route = "ALL_REPORT_LIST")
     object ReportUserOrdersListScreen : ReportsScreens(route = "REPORTS_USER_ORDER_LIST")
+
 
 }
 

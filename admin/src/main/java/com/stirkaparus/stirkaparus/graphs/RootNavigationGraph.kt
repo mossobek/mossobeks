@@ -1,6 +1,8 @@
 package com.stirkaparus.stirkaparus.graphs
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
@@ -18,12 +20,22 @@ fun RootNavigationGraph(navController: NavHostController) {
 
         authNavGraph(navController = navController)
         composable(route = Graph.HOME) {
-            HomeScreen(navigateToUserActivationScreen = {
+            HomeScreen(
+                navigateToUserActivationScreen = {
                 navController.navigate(AuthScreen.UserActivation.route) {
-                    popUpTo(Graph.ROOT){
+                    popUpTo(Graph.ROOT) {
                         inclusive = false
                     }
                 }
+
+            }, navToUpdateScreen = {
+
+                    navController.navigate(AuthScreen.Update.route) {
+                        popUpTo(Graph.ROOT) {
+                            inclusive = false
+                        }
+                    }
+
 
             })
         }

@@ -17,6 +17,7 @@ import com.stirkaparus.stirkaparus.common.Constants.COMPANY_ID
 import com.stirkaparus.stirkaparus.common.Constants.DELIVERED
 import com.stirkaparus.stirkaparus.common.Constants.ID
 import com.stirkaparus.stirkaparus.common.Constants.ORDERS
+import com.stirkaparus.stirkaparus.common.Constants.REPORTED
 import com.stirkaparus.stirkaparus.common.Constants.REPORTS
 import com.stirkaparus.stirkaparus.common.Constants.REPORT_ID
 import com.stirkaparus.stirkaparus.common.Constants.STATUS
@@ -94,39 +95,41 @@ class ReportsRepositoryImpl @Inject constructor(
     override suspend fun doReport(id: String): DoReportResponse {
 
 
-        Log.e(TAG, "doRepocvgrt: $id`")
+        Log.e(TAG, "doRepocvgrt: $id")
         Log.e(TAG, "doRepocvgrt: ${companyId.toString()}")
 
 
 
 
         return try {
-            val deliveredOrders =
-                compOrdersRef
-                    .document(companyId.toString())
-                    .collection(USERS)
-                    .document(id)
-                    .collection(ORDERS)
-                    .whereEqualTo(COMPANY_ID, companyId)
-                    .whereEqualTo(USER, id)
-                    .whereEqualTo(STATUS, DELIVERED)
-                    .whereEqualTo(DELIVERED, true)
-                    .get().await().toObjects(Order::class.java)
+            val deliveredOrders = firebaseFirestore
+                .collection(COMPANIES)
+                .document(companyId.toString())
+                .collection(USERS)
+                .document(id)
+                .collection(ORDERS)
+                .get().await().toObjects(Order::class.java)
 
+            Log.e(TAG, "doReport deliveredOrders: $deliveredOrders")
 
             firebaseFirestore.runTransaction { trans ->
+
                 val userOrders = firebaseFirestore.collection(ORDERS)
+
                 val reportId = firebaseFirestore
                     .collection(COMPANIES)
                     .document(companyId.toString())
                     .collection(REPORTS)
                     .document().id
+
                 var total = 0
+
                 for (i in deliveredOrders) {
                     total += i.total!!
+                    Log.e(TAG, "doReport: $i", )
                     trans.update(
                         userOrders.document(i.id.toString()), mapOf(
-                            DELIVERED to true,
+                            REPORTED to true,
                             REPORT_ID to reportId
                         )
                     )
@@ -145,6 +148,7 @@ class ReportsRepositoryImpl @Inject constructor(
                 val report = Report()
                 report.total = total
                 report.id = reportId
+                report.count = deliveredOrders.size
                 report.companyId = companyId.toString()
                 report.reported_time = FieldValue.serverTimestamp()
 

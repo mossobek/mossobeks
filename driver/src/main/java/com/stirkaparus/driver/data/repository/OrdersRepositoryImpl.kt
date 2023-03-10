@@ -1,9 +1,15 @@
 package com.stirkaparus.driver.data.repository
 
+import android.content.SharedPreferences
+import android.util.Log
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
+import com.stirkaparus.driver.common.Constants.COMPANIES
 import com.stirkaparus.driver.common.Constants.COMPANY_ID
 import com.stirkaparus.driver.common.Constants.CREATED
 import com.stirkaparus.driver.common.Constants.FINISHED
+import com.stirkaparus.driver.common.Constants.ID
+import com.stirkaparus.driver.common.Constants.ORDERS
 import com.stirkaparus.driver.common.Constants.STATUS
 import com.stirkaparus.driver.domain.repository.AddOrderInFirestoreResponse
 import com.stirkaparus.driver.domain.repository.OrdersRepository
@@ -19,12 +25,25 @@ import javax.inject.Singleton
 
 @Singleton
 class OrdersRepositoryImpl @Inject constructor(
-    private val ordersRef: CollectionReference
+    private val prefs: SharedPreferences,
+    private val firebaseFirestore: FirebaseFirestore
 ) : OrdersRepository {
 
+    private val companyId = prefs.getString(COMPANY_ID, "")
+    private val userId = prefs.getString(ID, "")
+    private val ordersRef = firebaseFirestore
+        .collection(COMPANIES)
+        .document(companyId.toString())
+        .collection(ORDERS)
 
-    override fun getCreatedOrders(
-         companyId: String
+
+    companion object {
+        const val TAG = "OrdersRepositoryImpl"
+    }
+
+
+    override fun getOrdersFromFireStore(
+
     ) = callbackFlow {
         val snapshotListener = ordersRef
             .whereEqualTo(COMPANY_ID, companyId)
@@ -32,7 +51,8 @@ class OrdersRepositoryImpl @Inject constructor(
             .addSnapshotListener { snapshot, e ->
                 val orderResponse = if (snapshot != null) {
                     val orders = snapshot.toObjects(Order::class.java)
-                     Success(orders)
+                    Log.e(TAG, "getOrdersFromFireStore: $orders ")
+                    Success(orders)
                 } else {
                     Failure(e)
                 }
@@ -49,7 +69,10 @@ class OrdersRepositoryImpl @Inject constructor(
         order: Order
     ): AddOrderInFirestoreResponse {
         return try {
-            ordersRef.document()
+            val id = ordersRef.document().id
+            order.id = id
+
+            ordersRef.document(id)
                 .set(order)
                 .await()
             Success(true)

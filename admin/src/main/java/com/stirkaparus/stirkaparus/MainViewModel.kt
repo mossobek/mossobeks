@@ -1,12 +1,15 @@
 package com.stirkaparus.stirkaparus
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.stirkaparus.model.Response
 import com.stirkaparus.model.User
 import com.stirkaparus.stirkaparus.common.Constants.ADMIN
 import com.stirkaparus.stirkaparus.common.Constants.CITY
@@ -20,7 +23,9 @@ import com.stirkaparus.stirkaparus.common.Constants.ROLE
 import com.stirkaparus.stirkaparus.common.Constants.USERS
 import com.stirkaparus.stirkaparus.domain.repository.AuthRepository
 import com.stirkaparus.stirkaparus.domain.repository.UserRepository
+import com.stirkaparus.stirkaparus.domain.repository.VersionControlResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,6 +41,20 @@ class MainViewModel @Inject constructor(
 
     init {
         getAuthState()
+        versionControl()
+    }
+
+    var versionControlResponse by mutableStateOf<VersionControlResponse>(Response
+        .Loading)
+        private set
+
+
+
+    private fun versionControl() = viewModelScope.launch {
+        authRepo.versionControl().collect { response ->
+            versionControlResponse = response
+        }
+
     }
 
     fun getAuthState() = authRepo.getAuthState(viewModelScope)
@@ -89,7 +108,7 @@ class MainViewModel @Inject constructor(
         if (uid != null) {
             FirebaseFirestore.getInstance().collection(USERS).document(uid).get()
                 .addOnSuccessListener {
-                    Log.e(TAG, "tryGetUserDataFromFireStore: $it", )
+                    Log.e(TAG, "tryGetUserDataFromFireStore: $it")
                     if (it.data != null) {
                         setDataInSP(it.toObject(User::class.java)!!)
                         success()

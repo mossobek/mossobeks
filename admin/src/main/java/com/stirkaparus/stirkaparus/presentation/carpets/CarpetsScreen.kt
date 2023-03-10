@@ -1,6 +1,8 @@
 package com.stirkaparus.stirkaparus.presentation.carpets
 
 import android.annotation.SuppressLint
+import android.util.Log
+import androidx.compose.animation.core.exponentialDecay
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,8 +21,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.stirkaparus.stirkaparus.presentation.ProgressDialog
+import com.stirkaparus.stirkaparus.presentation.TAG
 import com.stirkaparus.stirkaparus.presentation.carpets.components.AddCarpetSheet
 import com.stirkaparus.stirkaparus.presentation.carpets.components.CarpetItem
+import com.stirkaparus.stirkaparus.presentation.carpets.components.EditCarpetDialog
 import com.stirkaparus.stirkaparus.presentation.order_details.Resource
 import com.stirkaparus.stirkaparus.ui.theme.BackgroundColor
 import com.stirkaparus.stirkaparus.ui.theme.Blue17
@@ -29,18 +33,17 @@ import com.stirkaparus.stirkaparus.ui.theme.Blue17
 @Composable
 fun CarpetsScreen(
     navController: NavController,
-    viewModel: CarpetsViewModel = hiltViewModel()
+    viewModel: CarpetsViewModel = hiltViewModel(),
 ) {
 
     val id = navController.currentBackStackEntry?.arguments?.getString("id")
-    val context = LocalContext.current
     val carpetsResource by viewModel.fetchCarpets(id.toString())
         .collectAsState(initial = Resource.loading(null))
     val carpets = carpetsResource.data ?: emptyList()
-    var loading by remember { mutableStateOf(false) }
 
-
-
+    EditCarpetDialog(
+        openDialog = viewModel.editCarpetDialog
+    )
 
 
 
@@ -83,7 +86,7 @@ fun CarpetsScreen(
                 modifier = Modifier
                     .background(BackgroundColor)
                     .fillMaxWidth()
-                     .padding(bottom = 6.dp)
+                    .padding(bottom = 6.dp)
             ) {
                 Spacer(modifier = Modifier.height(6.dp))
 
@@ -92,7 +95,7 @@ fun CarpetsScreen(
                         modifier = Modifier
                             .background(BackgroundColor)
                             .fillMaxWidth()
-                            .padding(bottom = 6.dp) ,
+                            .padding(bottom = 6.dp),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -104,15 +107,21 @@ fun CarpetsScreen(
                         if (carpet != null) {
                             CarpetItem(
                                 carpet = carpet,
-                                onDeleteItemMenuClick = {
+                                onDeleteClick = {
+
+                                    viewModel.openDeleteCarpetDialog(it)
 
                                 },
-                                onClick = {
+                                onEditClick = {
+
+                                    viewModel.openEditCarpetDialog(it)
 
                                 }
                             )
+
                         }
-                        Spacer(modifier = Modifier.height(6.dp))
+                        Spacer(modifier = Modifier.height(11.dp))
+
                     }
                 }
 

@@ -4,10 +4,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.stirkaparus.driver.presentation.forgotPassword.ForgotPasswordScreen
+import com.stirkaparus.driver.presentation.UpdateScreen
+import com.stirkaparus.driver.presentation.forgot_password.ForgotPasswordScreen
 import com.stirkaparus.driver.presentation.login.LoginScreen
 import com.stirkaparus.driver.presentation.user_details.UserDetailsScreen
-import com.stirkaparus.driver.presentation.signUp.SignUpScreen
+import com.stirkaparus.driver.presentation.sign_up.SignUpScreen
 import com.stirkaparus.driver.presentation.verify_email.VerifyEmailScreen
 
 fun NavGraphBuilder.authNavGraph(
@@ -23,11 +24,16 @@ fun NavGraphBuilder.authNavGraph(
                 0, false
             )
         }
+
+        composable(route = AuthScreen.Update.route) {
+            UpdateScreen()
+
+        }
         composable(route = AuthScreen.UserActivation.route) {
             UserDetailsScreen(
                 navController = navController,
                 navigateToMainScreen = {
-                    navController.navigate(Graph.HOME)
+                    navController.navigate(Graph.SPLASH)
                     navController.popBackStack(
                         0, false
                     )
@@ -48,7 +54,7 @@ fun NavGraphBuilder.authNavGraph(
         }
         composable(route = AuthScreen.Verify.route) {
             VerifyEmailScreen(navigateToProfileScreen = {
-                navController.navigate(Graph.HOME)
+                navController.navigate(Graph.SPLASH)
             })
 
         }
@@ -58,11 +64,12 @@ fun NavGraphBuilder.authNavGraph(
 
 
 sealed class AuthScreen(val route: String) {
+    object Update : AuthScreen(route = "UPDATE")
     object Login : AuthScreen(route = "LOGIN")
     object SignUp : AuthScreen(route = "SING_UP")
     object Verify : AuthScreen(route = "VERIFY")
-     object ForgotPassword : AuthScreen(route = "FORGOT_PASSWORD")
-    object UserActivation : AuthScreen(route = "PROFILE_VERIFY")
+    object ForgotPassword : AuthScreen(route = "FORGOT_PASSWORD")
+    object UserActivation : AuthScreen(route = "USER_ACTIVATION")
 
 }
 

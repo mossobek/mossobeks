@@ -1,11 +1,15 @@
 package com.stirkaparus.stirkaparus.presentation.orders_list_screen.components
 
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Sort
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.stirkaparus.stirkaparus.presentation.orders_list_screen.OrdersViewModel
 
@@ -14,11 +18,14 @@ fun OrdersTopBar(
     viewModel: OrdersViewModel = hiltViewModel()
 ) {
     TopAppBar(
+        backgroundColor = Color.White,
+        contentColor = Color.Black,
         title = {
             Text(
-                text = "Заказы",
-                style = MaterialTheme.typography.h4
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center, color = Color.Black, text = "Заказы"
             )
+
         },
         actions = {
             IconButton(

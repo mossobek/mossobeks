@@ -44,6 +44,7 @@ class OrderDetailsRepositoryImpl(
     private val orderRef = firebaseFirestore.collection(ORDERS)
     private val companyRef = firebaseFirestore.collection(COMPANIES)
     override val currentUser: FirebaseUser? get() = auth.currentUser
+
     override fun getOrderFromFirestore(id: String) = callbackFlow {
         val orderIdRef = orderRef.document(id)
         val snapshotListener = orderIdRef.addSnapshotListener { snapshot, e ->
